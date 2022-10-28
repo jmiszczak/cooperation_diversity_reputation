@@ -2,10 +2,9 @@
 ;; turtles atributes
 ;;
 turtles-own [
-  strategy ;; 1 - contributor, green, 0 - free-rider, black
-  payoff ;; result of the last public goods game
-  contribution ;; player's contribution
-  neighborhood ;;
+  contribution ;; player's contribution: 1 - contributor, green, 0 - free-rider, black
+  income ;; income from the last round
+  neighborhood ;; group of players used for playng the game
 ]
 
 ;;
@@ -22,9 +21,18 @@ end
 ;; main subroutine
 ;;
 to go
+  ;; play the public goods game for all turtles
   ask turtles [
     play-pgg
+  ]
+  ;; udate the strategy using the cumulative income from the round
+  ask turtles [
+    ;; calculate new strategy
+    imitate-strategy
+    ;; update visual representation
     update-colors
+    ;; reset the income for the next round
+    set income 0
   ]
   tick
 end
@@ -37,8 +45,11 @@ to setup-world
   resize-world 0 (world-size - 1) 0 (world-size - 1)
   ;; heuristic scaling of the patch size
   set-patch-size floor ( 64 / (sqrt world-size) )
+
   ask patches [
+    ;; make all patches white
     set pcolor white
+    ;; add one turtle to each patch
     sprout 1
   ]
 end
@@ -46,16 +57,16 @@ end
 ;;
 ;; setup routine
 ;; contains selection of the initial strategies
+;;
 to setup-turtles
   ask turtles [
-    set payoff 0
+    ;; initializa the income
+    set income 0
     ;; randomle assign initial strategies
     ifelse random-float 1.0 < 0.5 [
-      set strategy 1
-      set contribution 1 ;; can be larger then 1
+      set contribution 1 ;; cooperator
     ] [
-      set strategy 0
-      set contribution 0 ;; no contribution
+      set contribution 0 ;; no contribution, free-rider
     ]
     update-colors
   ]
@@ -65,7 +76,7 @@ end
 ;; helper function to update visual aspects of turtles
 ;;
 to update-colors
-  ifelse strategy = 1 [
+  ifelse contribution = 1 [
     set color green
   ] [
     set color black
@@ -86,25 +97,41 @@ to play-pgg
   )
 
   ;; calculate the payoff
-  set payoff synergy-factor * (contribution + sum [ contribution ] of turtles-on neighborhood) / (1 + count turtles-on neighborhood)
+  let game-payoff synergy-factor * (contribution + sum [ contribution ] of turtles-on neighborhood) / (1 + count turtles-on neighborhood)
+    set income income + game-payoff - contribution
 
-  ;; select one of the neighbors
-  let my-neighbor one-of turtles-on neighborhood
-  let my-neighbor-payoff [ payoff ] of my-neighbor
-
-  ;; select new strategy using Fermi-Dirac function
-  if random-float 1.0 < 1 / (1 + exp ( ( payoff - my-neighbor-payoff  ) / noise-factor  ) )   [
-    set strategy [ strategy ] of my-neighbor
+  ask turtles-on neighborhood [
+    set income income + game-payoff - contribution
   ]
 
+end
 
+
+to imitate-strategy
+  ;; select one of the neighbors
+  let my-neighbor one-of turtles-on neighborhood
+  let my-neighbor-income [ income ] of my-neighbor
+
+  ;; select new strategy using Fermi-Dirac function
+  if random-float 1.0 < 1 / (1 + exp ( ( income - my-neighbor-income  ) / noise-factor  ) )   [
+    set contribution [ contribution ] of my-neighbor
+  ]
+
+end
+
+;;
+;; reporters
+;;
+
+to-report cooperators-fraction
+  report count turtles with [ contribution = 1 ] / count turtles
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
 10
-537
-338
+570
+371
 -1
 -1
 11.0
@@ -118,11 +145,11 @@ GRAPHICS-WINDOW
 1
 1
 0
-28
+31
 0
-28
-0
-0
+31
+1
+1
 1
 ticks
 30.0
@@ -130,13 +157,13 @@ ticks
 SLIDER
 11
 21
-183
+174
 54
 world-size
 world-size
 1
-100
-29.0
+200
+32.0
 1
 1
 NIL
@@ -175,8 +202,8 @@ BUTTON
 175
 112
 Go
-repeat 1000 [ go ]
-NIL
+go
+T
 1
 T
 OBSERVER
@@ -187,10 +214,10 @@ NIL
 1
 
 PLOT
-763
-16
-1261
-301
+606
+14
+969
+285
 Cooperation factor
 time step
 fraction of cooperators
@@ -202,29 +229,37 @@ true
 false
 "" ""
 PENS
-"default" 1.0 0 -16777216 true "" "plot count turtles with [ strategy = 1 ] / count turtles"
+"default" 1.0 0 -10899396 true "" "plot cooperators-fraction"
 
-INPUTBOX
-16
-234
-168
-294
-noise-factor
-0.5
-1
-0
-Number
-
-INPUTBOX
-14
-308
-175
-368
+SLIDER
+13
+244
+176
+277
 synergy-factor
-0.0
-1
+synergy-factor
 0
-Number
+10
+4.3
+0.1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+15
+195
+177
+228
+noise-factor
+noise-factor
+0.05
+20
+0.5
+0.05
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
