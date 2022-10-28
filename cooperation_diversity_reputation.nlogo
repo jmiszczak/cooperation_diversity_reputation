@@ -2,7 +2,10 @@
 ;; turtles atributes
 ;;
 turtles-own [
-  strategy ;; 0 - contributor, 1 - free-rider
+  strategy ;; 1 - contributor, green, 0 - free-rider, black
+  payoff ;; result of the last public goods game
+  contribution ;; player's contribution
+  neighborhood ;;
 ]
 
 ;;
@@ -19,7 +22,10 @@ end
 ;; main subroutine
 ;;
 to go
-  play-game
+  ask turtles [
+    play-pgg
+    update-colors
+  ]
   tick
 end
 
@@ -42,12 +48,15 @@ end
 ;; contains selection of the initial strategies
 to setup-turtles
   ask turtles [
+    set payoff 0
+    ;; randomle assign initial strategies
     ifelse random-float 1.0 < 0.5 [
-      set strategy 0
-    ] [
       set strategy 1
+      set contribution 1 ;; can be larger then 1
+    ] [
+      set strategy 0
+      set contribution 0 ;; no contribution
     ]
-
     update-colors
   ]
 end
@@ -56,7 +65,7 @@ end
 ;; helper function to update visual aspects of turtles
 ;;
 to update-colors
-  ifelse strategy = 0 [
+  ifelse strategy = 1 [
     set color green
   ] [
     set color black
@@ -66,26 +75,39 @@ end
 ;;
 ;; evolution routine
 ;;
-to play-game
-  ask turtles [
-    ;; select new strategy using Fermi-Dirac function
-    ifelse 1 / (1 + exp ( ( 2 - 3  ) / noise-factor  ) ) > random-float 1.0  [
-      set strategy 0
-    ] [
-      set strategy 1
-    ]
-    update-colors
+to play-pgg
+
+  ;; choose which neighborhood to use
+  (ifelse neighborhood-type = "von Neumann" [
+    set neighborhood neighbors4
+  ] neighborhood-type = "Moore" [
+    set neighborhood neighbors
   ]
+  )
+
+  ;; calculate the payoff
+  set payoff synergy-factor * (contribution + sum [ contribution ] of turtles-on neighborhood) / (1 + count turtles-on neighborhood)
+
+  ;; select one of the neighbors
+  let my-neighbor one-of turtles-on neighborhood
+  let my-neighbor-payoff [ payoff ] of my-neighbor
+
+  ;; select new strategy using Fermi-Dirac function
+  if random-float 1.0 < 1 / (1 + exp ( ( payoff - my-neighbor-payoff  ) / noise-factor  ) )   [
+    set strategy [ strategy ] of my-neighbor
+  ]
+
+
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
 10
-730
-531
+537
+338
 -1
 -1
-8.0
+11.0
 1
 10
 1
@@ -96,9 +118,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-63
+28
 0
-63
+28
 0
 0
 1
@@ -114,7 +136,7 @@ world-size
 world-size
 1
 100
-64.0
+29.0
 1
 1
 NIL
@@ -140,12 +162,12 @@ NIL
 CHOOSER
 14
 129
-162
+176
 174
-neighbourhood
-neighbourhood
+neighborhood-type
+neighborhood-type
 "von Neumann" "Moore"
-0
+1
 
 BUTTON
 112
@@ -153,7 +175,7 @@ BUTTON
 175
 112
 Go
-repeat 500 [ go ]
+repeat 1000 [ go ]
 NIL
 1
 T
@@ -180,28 +202,29 @@ true
 false
 "" ""
 PENS
-"default" 1.0 0 -16777216 true "" "plot count turtles with [ strategy = 0 ] / count turtles"
+"default" 1.0 0 -16777216 true "" "plot count turtles with [ strategy = 1 ] / count turtles"
 
 INPUTBOX
-17
-193
-178
-253
+16
+234
+168
+294
 noise-factor
 0.5
 1
 0
 Number
 
-TEXTBOX
-813
-427
-1099
-502
-TODO: add payoff selection\n\nTODO: add different neighbourhoods
-12
+INPUTBOX
+14
+308
+175
+368
+synergy-factor
 0.0
 1
+0
+Number
 
 @#$#@#$#@
 ## WHAT IS IT?
