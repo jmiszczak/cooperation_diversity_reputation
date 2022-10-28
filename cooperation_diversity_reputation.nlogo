@@ -60,6 +60,31 @@ end
 ;;
 to setup-turtles
   ask turtles [
+
+    ;; choose which neighborhood to use
+    (ifelse neighborhood-type = "von Neumann" [
+      set neighborhood neighbors4
+    ] neighborhood-type = "Moore" [
+      set neighborhood neighbors
+    ] neighborhood-type = "random von Neumann" [
+      set neighborhood n-of (1 + random 4 ) neighbors4
+      show neighborhood
+    ] neighborhood-type = "random Moore" [
+      set neighborhood n-of (1 + random 8 ) neighbors
+    ] neighborhood-type = "random von Neumann or Moore" [
+      ifelse random 1 = 0 [
+        set neighborhood n-of (1 + random 8 ) neighbors
+      ][
+        set neighborhood n-of (1 + random 4 ) neighbors4
+      ]
+    ] neighborhood-type = "von Neumann or Moore" [
+      ifelse random 1 = 0 [
+        set neighborhood neighbors
+      ][
+        set neighborhood neighbors4
+      ]
+    ])
+
     ;; initializa the income
     set income 0
     ;; randomle assign initial strategies
@@ -88,20 +113,15 @@ end
 ;;
 to play-pgg
 
-  ;; choose which neighborhood to use
-  (ifelse neighborhood-type = "von Neumann" [
-    set neighborhood neighbors4
-  ] neighborhood-type = "Moore" [
-    set neighborhood neighbors
-  ]
-  )
+
 
   ;; calculate the payoff
-  let game-payoff synergy-factor * (contribution + sum [ contribution ] of turtles-on neighborhood) / (1 + count turtles-on neighborhood)
-    set income income + game-payoff - contribution
+  let game-gain ( synergy-factor * (contribution + sum [ contribution ] of turtles-on neighborhood) / (1 + count turtles-on neighborhood) )
+
+  set income income + game-gain - contribution
 
   ask turtles-on neighborhood [
-    set income income + game-payoff - contribution
+    set income income + game-gain - contribution
   ]
 
 end
@@ -130,11 +150,11 @@ end
 GRAPHICS-WINDOW
 210
 10
-570
-371
+668
+469
 -1
 -1
-11.0
+9.0
 1
 10
 1
@@ -145,9 +165,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-31
+49
 0
-31
+49
 1
 1
 1
@@ -163,7 +183,7 @@ world-size
 world-size
 1
 200
-32.0
+50.0
 1
 1
 NIL
@@ -189,12 +209,12 @@ NIL
 CHOOSER
 14
 129
-176
+192
 174
 neighborhood-type
 neighborhood-type
-"von Neumann" "Moore"
-1
+"von Neumann" "Moore" "von Neumann or Moore" "random von Neumann" "random Moore" "random von Neumann or Moore"
+3
 
 BUTTON
 112
@@ -202,8 +222,8 @@ BUTTON
 175
 112
 Go
-go
-T
+repeat 10 [ go ]
+NIL
 1
 T
 OBSERVER
@@ -214,10 +234,10 @@ NIL
 1
 
 PLOT
-606
-14
-969
-285
+693
+15
+1056
+286
 Cooperation factor
 time step
 fraction of cooperators
@@ -240,7 +260,7 @@ synergy-factor
 synergy-factor
 0
 10
-4.3
+4.5
 0.1
 1
 NIL
