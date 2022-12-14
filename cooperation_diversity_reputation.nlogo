@@ -68,7 +68,6 @@ to setup-turtles
       set neighborhood neighbors
     ] neighborhood-type = "random von Neumann" [
       set neighborhood n-of (1 + random 4 ) neighbors4
-      show neighborhood
     ] neighborhood-type = "random Moore" [
       set neighborhood n-of (1 + random 8 ) neighbors
     ] neighborhood-type = "random von Neumann or Moore" [
@@ -150,11 +149,11 @@ end
 GRAPHICS-WINDOW
 210
 10
-668
-469
+548
+349
 -1
 -1
-9.0
+11.0
 1
 10
 1
@@ -165,11 +164,11 @@ GRAPHICS-WINDOW
 1
 1
 0
-49
+29
 0
-49
-1
-1
+29
+0
+0
 1
 ticks
 30.0
@@ -183,7 +182,7 @@ world-size
 world-size
 1
 200
-50.0
+30.0
 1
 1
 NIL
@@ -214,7 +213,7 @@ CHOOSER
 neighborhood-type
 neighborhood-type
 "von Neumann" "Moore" "von Neumann or Moore" "random von Neumann" "random Moore" "random von Neumann or Moore"
-3
+5
 
 BUTTON
 112
@@ -222,7 +221,7 @@ BUTTON
 175
 112
 Go
-repeat 10 [ go ]
+repeat 1000 [ go ]
 NIL
 1
 T
@@ -625,7 +624,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.2.1
+NetLogo 6.3.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
