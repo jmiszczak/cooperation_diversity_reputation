@@ -19,7 +19,7 @@
       <value value="&quot;random von Neumann or Moore&quot;"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="world-size">
-      <value value="20"/>
+      <value value="1000"/>
     </enumeratedValueSet>
   </experiment>
 
