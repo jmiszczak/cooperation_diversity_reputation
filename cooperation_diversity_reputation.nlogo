@@ -102,7 +102,7 @@ end
 to update-colors
   ifelse contribution = 1 [
     set color green
-  ] [
+  ][
     set color black
   ]
 end
@@ -111,8 +111,6 @@ end
 ;; evolution routine
 ;;
 to play-pgg
-
-
 
   ;; calculate the payoff
   let game-gain ( synergy-factor * (contribution + sum [ contribution ] of turtles-on neighborhood) / (1 + count turtles-on neighborhood) )
@@ -149,11 +147,11 @@ end
 GRAPHICS-WINDOW
 210
 10
-548
-349
+1018
+819
 -1
 -1
-11.0
+4.0
 1
 10
 1
@@ -164,9 +162,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-29
+199
 0
-29
+199
 0
 0
 1
@@ -182,7 +180,7 @@ world-size
 world-size
 1
 200
-30.0
+200.0
 1
 1
 NIL
@@ -213,7 +211,7 @@ CHOOSER
 neighborhood-type
 neighborhood-type
 "von Neumann" "Moore" "von Neumann or Moore" "random von Neumann" "random Moore" "random von Neumann or Moore"
-5
+0
 
 BUTTON
 112
@@ -259,7 +257,7 @@ synergy-factor
 synergy-factor
 0
 10
-4.5
+2.0
 0.1
 1
 NIL
@@ -628,6 +626,28 @@ NetLogo 6.3.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
+<experiments>
+  <experiment name="cooperators-stationary-synergy-200" repetitions="100" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="5000"/>
+    <metric>cooperators-fraction</metric>
+    <enumeratedValueSet variable="noise-factor">
+      <value value="0.5"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="synergy-factor" first="2" step="0.1" last="5.5"/>
+    <enumeratedValueSet variable="neighborhood-type">
+      <value value="&quot;von Neumann&quot;"/>
+      <value value="&quot;Moore&quot;"/>
+      <value value="&quot;random von Neumann&quot;"/>
+      <value value="&quot;random Moore&quot;"/>
+      <value value="&quot;random von Neumann or Moore&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="world-size">
+      <value value="200"/>
+    </enumeratedValueSet>
+  </experiment>
+</experiments>
 @#$#@#$#@
 @#$#@#$#@
 default
