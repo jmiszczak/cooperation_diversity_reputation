@@ -2,11 +2,32 @@
 <!DOCTYPE experiments SYSTEM "behaviorspace.dtd">
 <experiments>
 
-  <experiment name="cooperators-stationary-synergy-200" repetitions="100" runMetricsEveryStep="true">
+  <experiment name="cooperators-stationary-synergy-200" repetitions="100" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <timeLimit steps="5000"/>
-    <metric>cooperators-fraction</metric>
+    <metric>mean-cooperators1k</metric>
+    <enumeratedValueSet variable="noise-factor">
+      <value value="0.5"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="synergy-factor" first="2" step="0.1" last="5.5"/>
+    <enumeratedValueSet variable="neighborhood-type">
+      <value value="&quot;von Neumann&quot;"/>
+      <value value="&quot;Moore&quot;"/>
+      <value value="&quot;random von Neumann&quot;"/>
+      <value value="&quot;random Moore&quot;"/>
+      <value value="&quot;random von Neumann or Moore&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="world-size">
+      <value value="200"/>
+    </enumeratedValueSet>
+  </experiment>
+
+  <experiment name="cooperators-stationary-synergy-100" repetitions="10" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="2000"/>
+    <metric>mean-cooperators1k</metric>
     <enumeratedValueSet variable="noise-factor">
       <value value="0.5"/>
     </enumeratedValueSet>
@@ -19,8 +40,7 @@
       <value value="&quot;random von Neumann or Moore&quot;"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="world-size">
-      <value value="1000"/>
+      <value value="100"/>
     </enumeratedValueSet>
   </experiment>
-
 </experiments>

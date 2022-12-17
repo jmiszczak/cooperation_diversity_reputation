@@ -7,11 +7,17 @@ turtles-own [
   neighborhood ;; group of players used for playng the game
 ]
 
+;; cooperators fraction in last 1000 steps
+globals [
+  cooperators1k
+]
+
 ;;
 ;; setup the world
 ;;
 to setup
   clear-all
+  set cooperators1k []
   setup-world
   setup-turtles
   reset-ticks
@@ -34,7 +40,13 @@ to go
     ;; reset the income for the next round
     set income 0
   ]
+
+  ;; update the list with cooperators-fraction
+  update-cooperators1k
+
+  ;; finish the round
   tick
+
 end
 
 ;;
@@ -143,15 +155,28 @@ end
 to-report cooperators-fraction
   report count turtles with [ contribution = 1 ] / count turtles
 end
+
+to update-cooperators1k
+  ;; add current vale of cooperators-fraction to the list cooperators1k
+  set cooperators1k fput cooperators-fraction cooperators1k
+end
+
+to-report mean-cooperators1k
+  ifelse ticks >= 1000 [
+    report mean n-of 1000 cooperators1k
+  ][
+    report 0
+  ]
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
 10
-1018
-819
+517
+318
 -1
 -1
-4.0
+13.0
 1
 10
 1
@@ -162,9 +187,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-199
+22
 0
-199
+22
 0
 0
 1
@@ -180,7 +205,7 @@ world-size
 world-size
 1
 200
-200.0
+23.0
 1
 1
 NIL
@@ -219,7 +244,7 @@ BUTTON
 175
 112
 Go
-repeat 1000 [ go ]
+repeat 2000 [ go ]
 NIL
 1
 T
@@ -228,7 +253,7 @@ NIL
 G
 NIL
 NIL
-1
+0
 
 PLOT
 693
@@ -247,6 +272,7 @@ false
 "" ""
 PENS
 "default" 1.0 0 -10899396 true "" "plot cooperators-fraction"
+"pen-1" 1.0 0 -7500403 true "" "plot mean-cooperators1k"
 
 SLIDER
 13
@@ -257,7 +283,7 @@ synergy-factor
 synergy-factor
 0
 10
-2.0
+4.5
 0.1
 1
 NIL
@@ -272,7 +298,7 @@ noise-factor
 noise-factor
 0.05
 20
-0.5
+1.25
 0.05
 1
 NIL
@@ -627,11 +653,11 @@ NetLogo 6.3.0
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="cooperators-stationary-synergy-200" repetitions="100" runMetricsEveryStep="true">
+  <experiment name="cooperators-stationary-synergy-200" repetitions="100" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <timeLimit steps="5000"/>
-    <metric>cooperators-fraction</metric>
+    <metric>mean-cooperators1k</metric>
     <enumeratedValueSet variable="noise-factor">
       <value value="0.5"/>
     </enumeratedValueSet>
