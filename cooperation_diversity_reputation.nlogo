@@ -96,9 +96,9 @@ to setup-turtles
       ]
     ])
 
-    ;; initializa the income
+    ;; initialize the income
     set income 0
-    ;; randomle assign initial strategies
+    ;; randomly assign initial strategies
     ifelse random-float 1.0 < 0.5 [
       set contribution 1 ;; cooperator
     ] [

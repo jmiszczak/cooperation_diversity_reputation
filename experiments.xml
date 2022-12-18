@@ -23,10 +23,10 @@
     </enumeratedValueSet>
   </experiment>
 
-  <experiment name="cooperators-stationary-synergy-100" repetitions="10" runMetricsEveryStep="true">
+  <experiment name="cooperators-stationary-synergy-test" repetitions="10" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <timeLimit steps="2000"/>
+    <timeLimit steps="1000"/>
     <metric>mean-cooperators1k</metric>
     <enumeratedValueSet variable="noise-factor">
       <value value="0.5"/>
@@ -40,7 +40,8 @@
       <value value="&quot;random von Neumann or Moore&quot;"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="world-size">
-      <value value="100"/>
+      <value value="50"/>
     </enumeratedValueSet>
   </experiment>
+
 </experiments>
