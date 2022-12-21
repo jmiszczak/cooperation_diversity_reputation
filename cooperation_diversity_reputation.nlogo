@@ -125,7 +125,7 @@ end
 to play-pgg
 
   ;; calculate the payoff
-  let game-gain ( synergy-factor * (contribution + sum [ contribution ] of neighborhood) / (1 + count turtles-on neighborhood) )
+  let game-gain ( synergy-factor * (contribution + sum [ contribution ] of neighborhood) / (1 + count neighborhood) )
 
   set income income + game-gain - contribution
 
@@ -236,7 +236,7 @@ CHOOSER
 neighborhood-type
 neighborhood-type
 "von Neumann" "Moore" "von Neumann or Moore" "random von Neumann" "random Moore" "random von Neumann or Moore"
-0
+1
 
 BUTTON
 112
@@ -283,7 +283,7 @@ synergy-factor
 synergy-factor
 0
 10
-1.0
+1.7
 0.1
 1
 NIL
@@ -298,7 +298,7 @@ noise-factor
 noise-factor
 0.05
 20
-1.25
+0.5
 0.05
 1
 NIL
