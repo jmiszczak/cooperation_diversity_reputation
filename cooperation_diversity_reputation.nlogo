@@ -304,23 +304,6 @@ noise-factor
 NIL
 HORIZONTAL
 
-BUTTON
-47
-300
-129
-333
-profiler
-profile
-NIL
-1
-T
-OBSERVER
-NIL
-P
-NIL
-NIL
-1
-
 @#$#@#$#@
 ## WHAT IS IT?
 
