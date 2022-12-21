@@ -1,7 +1,7 @@
 ;;
-;; turtles atributes
+;; patches atributes
 ;;
-turtles-own [
+patches-own [
   contribution ;; player's contribution: 1 - contributor, green, 0 - free-rider, black
   income ;; income from the last round
   neighborhood ;; group of players used for playng the game
@@ -19,7 +19,7 @@ to setup
   clear-all
   set cooperators1k []
   setup-world
-  setup-turtles
+  setup-patches
   reset-ticks
 end
 
@@ -28,14 +28,14 @@ end
 ;;
 to go
   ;; play the public goods game for all turtles
-  ask turtles [
+  ask patches [
     play-pgg
   ]
   ;; udate the strategy using the cumulative income from the round
-  ask turtles [
+  ask patches [
     ;; calculate new strategy
     imitate-strategy
-    ;; update visual representation
+    ;; update colors of the visual representation - NOTE: this is commented by default
     update-colors
     ;; reset the income for the next round
     set income 0
@@ -62,7 +62,7 @@ to setup-world
     ;; make all patches white
     set pcolor white
     ;; add one turtle to each patch
-    sprout 1
+    ;;sprout 1
   ]
 end
 
@@ -70,8 +70,8 @@ end
 ;; setup routine
 ;; contains selection of the initial strategies
 ;;
-to setup-turtles
-  ask turtles [
+to setup-patches
+  ask patches [
 
     ;; choose which neighborhood to use
     (ifelse neighborhood-type = "von Neumann" [
@@ -113,9 +113,9 @@ end
 ;;
 to update-colors
   ifelse contribution = 1 [
-    set color green
+    set pcolor green
   ][
-    set color black
+    set pcolor black
   ]
 end
 
@@ -125,11 +125,11 @@ end
 to play-pgg
 
   ;; calculate the payoff
-  let game-gain ( synergy-factor * (contribution + sum [ contribution ] of turtles-on neighborhood) / (1 + count turtles-on neighborhood) )
+  let game-gain ( synergy-factor * (contribution + sum [ contribution ] of neighborhood) / (1 + count turtles-on neighborhood) )
 
   set income income + game-gain - contribution
 
-  ask turtles-on neighborhood [
+  ask neighborhood [
     set income income + game-gain - contribution
   ]
 
@@ -138,7 +138,7 @@ end
 
 to imitate-strategy
   ;; select one of the neighbors
-  let my-neighbor one-of turtles-on neighborhood
+  let my-neighbor one-of neighborhood
   let my-neighbor-income [ income ] of my-neighbor
 
   ;; select new strategy using Fermi-Dirac function
@@ -153,7 +153,7 @@ end
 ;;
 
 to-report cooperators-fraction
-  report count turtles with [ contribution = 1 ] / count turtles
+  report count patches with [ contribution = 1 ] / count patches
 end
 
 to update-cooperators1k
@@ -172,11 +172,11 @@ end
 GRAPHICS-WINDOW
 210
 10
-517
-318
+668
+469
 -1
 -1
-13.0
+9.0
 1
 10
 1
@@ -187,9 +187,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-22
+49
 0
-22
+49
 0
 0
 1
@@ -205,7 +205,7 @@ world-size
 world-size
 1
 200
-23.0
+50.0
 1
 1
 NIL
@@ -283,7 +283,7 @@ synergy-factor
 synergy-factor
 0
 10
-4.5
+1.0
 0.1
 1
 NIL
@@ -303,6 +303,23 @@ noise-factor
 1
 NIL
 HORIZONTAL
+
+BUTTON
+47
+300
+129
+333
+profiler
+profile
+NIL
+1
+T
+OBSERVER
+NIL
+P
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?

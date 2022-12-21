@@ -1,5 +1,3 @@
-extensions [ csv profiler ]
-
 ;;
 ;; turtles atributes
 ;;
@@ -12,24 +10,13 @@ turtles-own [
 ;; cooperators fraction in last 1000 steps
 globals [
   cooperators1k
-  noise-factor-inv
 ]
 
-;; profiling
-to profile
-  profiler:start         ;; start profiling
-  repeat 2000 [ go ]
-  profiler:stop          ;; stop profiling
-  print profiler:report  ;; view the results
-  csv:to-file "profiler_data.csv" profiler:data
-  profiler:reset         ;; clear the data
-end
 ;;
 ;; setup the world
 ;;
 to setup
   clear-all
-  set noise-factor-inv  1 / noise-factor
   set cooperators1k []
   setup-world
   setup-turtles
@@ -155,7 +142,7 @@ to imitate-strategy
   let my-neighbor-income [ income ] of my-neighbor
 
   ;; select new strategy using Fermi-Dirac function
-  if ( random-float 1.0 ) * (1 + exp ( noise-factor-inv * ( income - my-neighbor-income ) ) ) < 1 [
+  if random-float 1.0 < 1 / (1 + exp ( ( income - my-neighbor-income  ) / noise-factor  ) )   [
     set contribution [ contribution ] of my-neighbor
   ]
 
@@ -185,11 +172,11 @@ end
 GRAPHICS-WINDOW
 210
 10
-668
-469
+517
+318
 -1
 -1
-9.0
+13.0
 1
 10
 1
@@ -200,9 +187,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-49
+22
 0
-49
+22
 0
 0
 1
@@ -218,7 +205,7 @@ world-size
 world-size
 1
 200
-50.0
+23.0
 1
 1
 NIL
@@ -316,23 +303,6 @@ noise-factor
 1
 NIL
 HORIZONTAL
-
-BUTTON
-13
-297
-171
-330
-profiler
-profile
-NIL
-1
-T
-OBSERVER
-NIL
-P
-NIL
-NIL
-1
 
 @#$#@#$#@
 ## WHAT IS IT?
