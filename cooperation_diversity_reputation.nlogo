@@ -35,7 +35,7 @@ to go
   ask patches [
     ;; calculate new strategy
     imitate-strategy
-    ;; update colors of the visual representation - NOTE: this is commented by default
+    ;; update colors of the visual representation - NOTE: this shoube be commented out by default
     update-colors
     ;; reset the income for the next round
     set income 0
@@ -142,7 +142,7 @@ to imitate-strategy
   let my-neighbor-income [ income ] of my-neighbor
 
   ;; select new strategy using Fermi-Dirac function
-  if random-float 1.0 < 1 / (1 + exp ( ( income - my-neighbor-income  ) / noise-factor  ) )   [
+  if ( random-float 1.0 ) * (1 + exp ( ( income - my-neighbor-income  ) / noise-factor  ) )  < 1 [
     set contribution [ contribution ] of my-neighbor
   ]
 
@@ -163,7 +163,7 @@ end
 
 to-report mean-cooperators1k
   ifelse ticks >= 1000 [
-    report mean n-of 1000 cooperators1k
+    report mean ( sublist cooperators1k 0 1000 )
   ][
     report 0
   ]
@@ -190,8 +190,8 @@ GRAPHICS-WINDOW
 49
 0
 49
-0
-0
+1
+1
 1
 ticks
 30.0
@@ -236,7 +236,7 @@ CHOOSER
 neighborhood-type
 neighborhood-type
 "von Neumann" "Moore" "von Neumann or Moore" "random von Neumann" "random Moore" "random von Neumann or Moore"
-1
+0
 
 BUTTON
 112
@@ -244,7 +244,7 @@ BUTTON
 175
 112
 Go
-repeat 2000 [ go ]
+repeat 5000 [ go ]
 NIL
 1
 T
@@ -283,7 +283,7 @@ synergy-factor
 synergy-factor
 0
 10
-1.7
+5.5
 0.1
 1
 NIL
@@ -303,6 +303,17 @@ noise-factor
 1
 NIL
 HORIZONTAL
+
+MONITOR
+793
+345
+942
+390
+NIL
+mean-cooperators1k
+3
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
