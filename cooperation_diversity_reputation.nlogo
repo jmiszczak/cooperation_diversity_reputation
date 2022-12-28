@@ -10,6 +10,7 @@ patches-own [
 ;; cooperators fraction in last 1000 steps
 globals [
   cooperators1k
+  inv-noise-factor
 ]
 
 ;;
@@ -18,6 +19,7 @@ globals [
 to setup
   clear-all
   set cooperators1k []
+  set inv-noise-factor 1 / noise-factor
   setup-world
   setup-patches
   reset-ticks
@@ -142,7 +144,7 @@ to imitate-strategy
   let my-neighbor-income [ income ] of my-neighbor
 
   ;; select new strategy using Fermi-Dirac function
-  if ( random-float 1.0 ) * (1 + exp ( ( income - my-neighbor-income  ) / noise-factor  ) )  < 1 [
+  if ( random-float 1.0 ) * (1 + exp ( ( income - my-neighbor-income  ) * inv-noise-factor  ) )  < 1 [
     set contribution [ contribution ] of my-neighbor
   ]
 
@@ -172,11 +174,11 @@ end
 GRAPHICS-WINDOW
 210
 10
-668
-469
+818
+619
 -1
 -1
-9.0
+6.0
 1
 10
 1
@@ -187,9 +189,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-49
+99
 0
-49
+99
 1
 1
 1
@@ -205,7 +207,7 @@ world-size
 world-size
 1
 200
-50.0
+100.0
 1
 1
 NIL
