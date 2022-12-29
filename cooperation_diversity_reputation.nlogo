@@ -5,21 +5,46 @@ patches-own [
   contribution ;; player's contribution: 1 - contributor, green, 0 - free-rider, black
   income ;; income from the last round
   neighborhood ;; group of players used for playng the game
+  reputation ;; reputation - used to calculate the prestige (Good or Bad) of the player
+  prestige ;; Good (1) or Bad (0)
 ]
 
 ;; cooperators fraction in last 1000 steps
 globals [
   cooperators1k
   inv-noise-factor
+  inv-reputation-updating-p-i
+
+  cooperator
+  freerider
+  good
+  bad
+
 ]
 
 ;;
 ;; setup the world
 ;;
 to setup
+  ;; initial cleanup
   clear-all
-  set cooperators1k []
+
+  ;; strategy
+  set cooperator 1
+  set freerider 0
+
+  ;; prestige
+  set good 1
+  set bad 0
+
+  ;; other constants
   set inv-noise-factor 1 / noise-factor
+  set inv-reputation-updating-p-i floor ( 1 / reputation-updating-p )
+
+  ;; data collected during the game
+  set cooperators1k []
+
+  ;; main setup
   setup-world
   setup-patches
   reset-ticks
@@ -35,9 +60,20 @@ to go
   ]
   ;; udate the strategy using the cumulative income from the round
   ask patches [
-    ;; calculate new strategy
-    imitate-strategy
-    ;; update colors of the visual representation - NOTE: this shoube be commented out by default
+    ifelse utilize-reputation [
+      ;; update the prestige
+      if random-float 1.0 < reputation-updating-p [
+        update-prestige
+        update-reputation
+      ]
+      ;; calculate new strategy
+      imitate-strategy-reputation
+    ][
+      ;; no prestige/reputation update, only strategy
+      imitate-strategy-reputation
+    ]
+
+    ;; update colors of the visual representation - NOTE: this should be commented out by default
     update-colors
     ;; reset the income for the next round
     set income 0
@@ -106,6 +142,16 @@ to setup-patches
     ] [
       set contribution 0 ;; no contribution, free-rider
     ]
+
+    ;; initialize the reputation and the prestige
+    set reputation random 100
+
+    ifelse random-float 1.0 < 0.5 [
+      set prestige 1 ;; Good
+    ] [
+      set prestige 0 ;; bad
+    ]
+
     update-colors
   ]
 end
@@ -137,7 +183,10 @@ to play-pgg
 
 end
 
-
+;;
+;; strategy update
+;;
+;; version without reputation
 to imitate-strategy
   ;; select one of the neighbors
   let my-neighbor one-of neighborhood
@@ -147,6 +196,73 @@ to imitate-strategy
   if ( random-float 1.0 ) * (1 + exp ( ( income - my-neighbor-income  ) * inv-noise-factor  ) )  < 1 [
     set contribution [ contribution ] of my-neighbor
   ]
+end
+
+;; version based on the reputation
+to imitate-strategy-reputation
+
+  ;; select one of the neighbors
+  let my-neighbor one-of neighborhood
+
+  ;; check its income and strategy
+  let my-neighbor-income [ income ] of my-neighbor
+  let my-neighbor-contribution [ contribution ] of my-neighbor
+
+  ;; check its prestige
+  let my-neighbor-prestige [ prestige ] of my-neighbor
+    let imitation-susceptibility 1
+  if my-neighbor-prestige = 0 [
+    set imitation-susceptibility 0.01
+  ]
+
+  ;; select new strategy using Fermi-Dirac function with prestige-based susceptibility
+  if ( random-float 1.0 ) * (1 + exp ( ( income - my-neighbor-income  ) * inv-noise-factor  ) )  < imitation-susceptibility [
+    set contribution [ contribution ] of my-neighbor
+  ]
+
+end
+
+;; reputation and prestige update
+to update-prestige
+
+  ;; update the prestige accordig to the erned reputation
+  ifelse reputation >= reputation-threshold [
+    set prestige 1
+  ] [
+    set prestige 0
+  ]
+
+end
+
+;; adaptive reputation update
+to update-reputation
+  (ifelse
+    prestige = good and contribution = cooperator
+    [
+      ;; increase reputation
+      set reputation reputation + reputation-update
+    ]
+    prestige = good and contribution = freerider
+    [
+      ;; loose reputation
+      set reputation reputation - 2 * inv-reputation-updating-p-i * reputation-update
+    ]
+    prestige = bad and contribution = cooperator
+    [
+      ;; no update
+    ]
+    prestige = bad and contribution = freerider
+    [
+      ;; loose reputation
+      set reputation reputation + reputation-update
+    ]
+  )
+
+  (ifelse reputation > 100 [
+    set reputation 100
+  ] reputation < 0 [
+    set reputation 0
+  ])
 
 end
 
@@ -172,13 +288,13 @@ to-report mean-cooperators1k
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
+229
 10
-818
-619
+589
+371
 -1
 -1
-6.0
+11.0
 1
 10
 1
@@ -189,9 +305,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-99
+31
 0
-99
+31
 1
 1
 1
@@ -201,23 +317,23 @@ ticks
 SLIDER
 11
 21
-174
+202
 54
 world-size
 world-size
 1
 200
-100.0
+32.0
 1
 1
 NIL
 HORIZONTAL
 
 BUTTON
-14
-78
-88
-111
+13
+73
+87
+106
 Setup
 setup
 NIL
@@ -231,22 +347,22 @@ NIL
 1
 
 CHOOSER
-14
-129
-192
-174
+12
+235
+211
+280
 neighborhood-type
 neighborhood-type
 "von Neumann" "Moore" "von Neumann or Moore" "random von Neumann" "random Moore" "random von Neumann or Moore"
-0
+1
 
 BUTTON
-112
-79
-175
-112
+118
+72
+193
+105
 Go
-repeat 5000 [ go ]
+repeat 2048 [ go ]
 NIL
 1
 T
@@ -258,15 +374,15 @@ NIL
 0
 
 PLOT
-693
-15
-1056
-286
+631
+12
+994
+283
 Cooperation factor
 time step
 fraction of cooperators
 0.0
-10000.0
+16384.0
 0.0
 1.0
 true
@@ -277,25 +393,25 @@ PENS
 "pen-1" 1.0 0 -7500403 true "" "plot mean-cooperators1k"
 
 SLIDER
-13
-244
-176
-277
+14
+168
+206
+201
 synergy-factor
 synergy-factor
 0
 10
-5.5
+3.7
 0.1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-15
-195
-177
-228
+16
+119
+208
+152
 noise-factor
 noise-factor
 0.05
@@ -307,15 +423,71 @@ NIL
 HORIZONTAL
 
 MONITOR
-793
-345
-942
-390
+633
+320
+782
+365
 NIL
 mean-cooperators1k
 3
 1
 11
+
+SLIDER
+19
+342
+215
+375
+reputation-updating-p
+reputation-updating-p
+0
+1
+0.1
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+19
+390
+213
+423
+reputation-threshold
+reputation-threshold
+0
+100
+60.0
+1
+1
+NIL
+HORIZONTAL
+
+SWITCH
+21
+294
+212
+327
+utilize-reputation
+utilize-reputation
+0
+1
+-1000
+
+SLIDER
+17
+434
+212
+467
+reputation-update
+reputation-update
+1
+50
+3.0
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
