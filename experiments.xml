@@ -66,4 +66,25 @@
     </enumeratedValueSet>
   </experiment>
 
+  <experiment name="cooperators-realizations-32" repetitions="32" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="4096"/>
+    <metric>mean-cooperators1k</metric>
+    <metric>cooperators-fraction</metric>
+    <enumeratedValueSet variable="noise-factor">
+      <value value="0.5"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="synergy-factor" first="3" step="0.2" last="6"/>
+    <enumeratedValueSet variable="neighborhood-type">
+      <value value="&quot;von Neumann&quot;"/>
+      <value value="&quot;Moore&quot;"/>
+      <value value="&quot;random von Neumann&quot;"/>
+      <value value="&quot;random Moore&quot;"/>
+      <value value="&quot;random von Neumann or Moore&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="world-size">
+      <value value="32"/>
+    </enumeratedValueSet>
+  </experiment>
 </experiments>
