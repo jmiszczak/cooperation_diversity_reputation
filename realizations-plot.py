@@ -36,7 +36,7 @@ sfs = [3. , 3.2, 3.4, 3.6, 3.8, 4. , 4.2, 4.4, 4.6, 4.8, 5. , 5.2, 5.4, 5.6, 5.8
 steps = data[sxs[0]]["[step]"].unique() # read from file
 
 # skip some steps further on
-skip = 256
+skip = 64
 
 
 
@@ -59,9 +59,10 @@ plot_data = dict()
 fig = mpl.figure.Figure(figsize=(2*6, 2*5.5))
 for i, sf in enumerate(sfs):
   axs = fig.add_subplot(4,4,i+1)
-  #axs.set_xscale("log", base=10)
-  #axs.set_yscale("log", base=10)
-  axs.set_ylim([0.001, 1.2])
+  # axs.set_xscale("log", base=10)
+  # axs.set_yscale("log", base=10)
+  #axs.set_ylim([0.0, 1.2])
+  # axs.set_xlim([0.0, 100])
   axs.set_xlim([0, max(steps)])
   axs.grid(True, linestyle=':', linewidth=0.5, c='k')
    
@@ -70,7 +71,7 @@ for i, sf in enumerate(sfs):
       plot_data[sx] = df[sx][df[sx]['synergy-factor'] == sf][["[step]","cooperators-fraction-mean"]].to_numpy()
       axs.set_title(r"$r={}$".format(sf))
 
-      axs.plot(plot_data[sx].T[0], plot_data[sx].T[1], markers[i], c = colors[i], label = sx )
+      axs.plot(plot_data[sx].T[0], plot_data[sx].T[1], c = colors[i], label = sx )
   
 
   
@@ -78,7 +79,7 @@ for i, sf in enumerate(sfs):
   #axs.set_xticks(steps[::10*skip])
   
 handles, labels = axs.get_legend_handles_labels()
-lgd = fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.525,1.0), ncol=5)
+lgd = fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.525,1.02), ncol=5)
 
 fig.tight_layout()
 display(fig)
