@@ -15,7 +15,7 @@ mpl.rc('font', size=10)
 # Note: header=6 is for NetLogo data
 
 exp_desc = 'cooperators-realizations-64'
-sxs = [ 'vN', 'M', 'rvN', 'rM', 'rvNM']
+sxs = { 'vN' : "von Neumann", 'M': 'Moore', 'rvN' : 'random von Neumann', 'rM': 'random Moore'} #, 'rvNM': 'random von Neumann or random  Moore' }
 markers = ['o', 'x', 's', '^', '2']
 colors = ['k', 'r', 'b', 'g', 'm']
 
