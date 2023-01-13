@@ -290,11 +290,11 @@ end
 GRAPHICS-WINDOW
 229
 10
-589
-371
+749
+531
 -1
 -1
-11.0
+8.0
 1
 10
 1
@@ -305,9 +305,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-31
+63
 0
-31
+63
 1
 1
 1
@@ -323,7 +323,7 @@ world-size
 world-size
 1
 200
-32.0
+64.0
 1
 1
 NIL
@@ -348,13 +348,13 @@ NIL
 
 CHOOSER
 12
-235
-211
-280
+227
+205
+272
 neighborhood-type
 neighborhood-type
 "von Neumann" "Moore" "von Neumann or Moore" "random von Neumann" "random Moore" "random von Neumann or Moore"
-1
+3
 
 BUTTON
 118
@@ -362,8 +362,8 @@ BUTTON
 193
 105
 Go
-repeat 2048 [ go ]
-NIL
+;;repeat 4096 [ go ]\ngo
+T
 1
 T
 OBSERVER
@@ -374,10 +374,10 @@ NIL
 0
 
 PLOT
-631
-12
-994
-283
+770
+21
+1133
+292
 Cooperation factor
 time step
 fraction of cooperators
@@ -401,7 +401,7 @@ synergy-factor
 synergy-factor
 0
 10
-3.7
+4.6
 0.1
 1
 NIL
@@ -423,10 +423,10 @@ NIL
 HORIZONTAL
 
 MONITOR
-633
-320
-782
-365
+980
+333
+1129
+378
 NIL
 mean-cooperators1k
 3
@@ -434,10 +434,10 @@ mean-cooperators1k
 11
 
 SLIDER
-19
-342
-215
-375
+11
+350
+207
+383
 reputation-updating-p
 reputation-updating-p
 0
@@ -449,10 +449,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-19
-390
-213
-423
+11
+398
+205
+431
 reputation-threshold
 reputation-threshold
 0
@@ -464,21 +464,21 @@ NIL
 HORIZONTAL
 
 SWITCH
-21
-294
-212
-327
+13
+302
+204
+335
 utilize-reputation
 utilize-reputation
-0
+1
 1
 -1000
 
 SLIDER
-17
-434
-212
-467
+9
+442
+204
+475
 reputation-update
 reputation-update
 1
@@ -488,6 +488,17 @@ reputation-update
 1
 NIL
 HORIZONTAL
+
+MONITOR
+769
+333
+916
+378
+cooperators fraction
+cooperators-fraction
+4
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
