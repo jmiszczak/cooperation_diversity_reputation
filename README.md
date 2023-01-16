@@ -2,6 +2,8 @@
 
 NetLogo implementation of the model of cooperation with interaction diversity and reputation-updating timescale.
 
+Currently, there are two version of the model provided: patch-based and turtle-based.
+
 ## Summary
 
 The code provided in this repository was developed to reproduce results concerning the emergence of cooperation in model with interaction diversity and with reputation updating. For the original papers see references below.
@@ -14,7 +16,7 @@ Additionally:
 
 - The model was developed using `NetLog` and testes in version 6.3.0. 
 - Control scripts are written in ``bash``. 
-- Plotting scripts are written in Python and require ``mapltplotlib`` and ``pandas`` packages.
+- Plotting scripts are written in Python and require ``matplotlib`` and ``pandas`` packages.
 
 ## References
 
