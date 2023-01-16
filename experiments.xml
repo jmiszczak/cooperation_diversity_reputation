@@ -44,7 +44,6 @@
     </enumeratedValueSet>
   </experiment>
 
-
   <experiment name="cooperators-stationary-synergy-test" repetitions="10" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
@@ -128,8 +127,5 @@
       <value value="64"/>
     </enumeratedValueSet>
   </experiment>
-
-
-
 
 </experiments>
