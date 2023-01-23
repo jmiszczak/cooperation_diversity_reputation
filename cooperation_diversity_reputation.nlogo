@@ -290,11 +290,11 @@ end
 GRAPHICS-WINDOW
 229
 10
-749
-531
+589
+371
 -1
 -1
-8.0
+11.0
 1
 10
 1
@@ -305,9 +305,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-63
+31
 0
-63
+31
 1
 1
 1
@@ -323,7 +323,7 @@ world-size
 world-size
 1
 200
-64.0
+32.0
 1
 1
 NIL
@@ -362,8 +362,8 @@ BUTTON
 193
 105
 Go
-;;repeat 4096 [ go ]\ngo
-T
+repeat 4096 [ go ]\n
+NIL
 1
 T
 OBSERVER
@@ -442,7 +442,7 @@ reputation-updating-p
 reputation-updating-p
 0
 1
-0.1
+0.5
 0.01
 1
 NIL
@@ -457,7 +457,7 @@ reputation-threshold
 reputation-threshold
 0
 100
-60.0
+50.0
 1
 1
 NIL
@@ -470,7 +470,7 @@ SWITCH
 335
 utilize-reputation
 utilize-reputation
-1
+0
 1
 -1000
 
@@ -483,7 +483,7 @@ reputation-update
 reputation-update
 1
 50
-3.0
+20.0
 1
 1
 NIL
@@ -867,6 +867,35 @@ NetLogo 6.3.0
     </enumeratedValueSet>
     <enumeratedValueSet variable="world-size">
       <value value="200"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>count turtles</metric>
+    <enumeratedValueSet variable="utilize-reputation">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="neighborhood-type">
+      <value value="&quot;random von Neumann&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="reputation-updating-p">
+      <value value="0.1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="noise-factor">
+      <value value="0.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="synergy-factor">
+      <value value="4.6"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="reputation-threshold">
+      <value value="60"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="reputation-update">
+      <value value="3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="world-size">
+      <value value="64"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>
