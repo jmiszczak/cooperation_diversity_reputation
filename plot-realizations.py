@@ -105,7 +105,7 @@ for i, sf in enumerate(sfs):
       axs.fill_between(plot_data_mean[sx].T[0], 
                        plot_data_mean[sx].T[1]+plot_data_std[sx].T[1], 
                        plot_data_mean[sx].T[1]-plot_data_std[sx].T[1], color=colors[i][0], alpha=.25, linewidth=.35)
-      axs.plot(plot_data_mean[sx].T[0], plot_data_mean[sx].T[1],  colors[i], label = sxs[sx] )
+      axs.plot(plot_data_mean[sx].T[0], plot_data_mean[sx].T[1],  colors[i], label = sxs[sx], linewidth=1)
   
 
   
