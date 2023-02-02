@@ -7,7 +7,7 @@ import matplotlib as mpl
 from os.path import exists
 #import matplotlib.colors as colors
 
-mpl.rc('text', usetex=False)
+mpl.rc('text', usetex=True)
 mpl.rc('font', family='serif')
 mpl.rc('font', size=10)
 
@@ -26,10 +26,11 @@ colors = ['k--', 'r-.', 'b:', 'g-', 'm']
 data = dict() 
 v = ['synergy-factor', '[step]', 'cooperators-fraction-mean', 'cooperators-fraction-std']
 df = dict() # dcit of pandas dfs
-
-for sx in sxs :
-    data[sx] = pd.read_csv(exp_desc + '-' + sx + '.csv', header=0)
-    df[sx] = pd.DataFrame(columns=v)
+# %% save/load data
+if  not exists('data_' + exp_desc + '.h5'):
+  for sx in sxs :
+      data[sx] = pd.read_csv(exp_desc + '-' + sx + '.csv', header=0)
+      df[sx] = pd.DataFrame(columns=v)
 
 # select variables for the analysis 
 # this depends on the experiment
@@ -41,14 +42,17 @@ sfs = [3.5, 3.6, 3.7, 3.8,
        4.0, 4.1, 4.2, 4.4, 
        4.5, 4.7, 4.8, 4.9, 
        5.0, 5.1, 5.3, 5.5 ] # some preselected values
-steps = data['vN']["[step]"].unique() # read from file
+
 
 # skip some steps further on
 skip = 512
 
+# handle the step upper limit (based on experiments.xml)
+max_steps = 32768
+
 # %% save/load data
 if  not exists('data_' + exp_desc + '.h5'):
-    
+    steps = data['vN']["[step]"].unique() # read from file
     #%% data calculation
     for sx in sxs :
         for sf in sfs:
@@ -79,7 +83,7 @@ for i, sf in enumerate(sfs):
   # axs.set_yscale("log", base=10)
   axs.set_ylim([0.0, 1.05])
   # axs.set_xlim([0.0, 100])
-  axs.set_xlim([1, max(steps)])
+  axs.set_xlim([1, max_steps])
   axs.set_xticks([0,10000,20000,30000])
   axs.set_yticks([0,0.25,0.5,0.75,1])
   axs.grid(True, linestyle=':', linewidth=0.5, c='k')
@@ -100,7 +104,7 @@ for i, sf in enumerate(sfs):
       
       axs.fill_between(plot_data_mean[sx].T[0], 
                        plot_data_mean[sx].T[1]+plot_data_std[sx].T[1], 
-                       plot_data_mean[sx].T[1]-plot_data_std[sx].T[1], alpha=.5, linewidth=1.3)
+                       plot_data_mean[sx].T[1]-plot_data_std[sx].T[1], color=colors[i][0], alpha=.25, linewidth=.35)
       axs.plot(plot_data_mean[sx].T[0], plot_data_mean[sx].T[1],  colors[i], label = sxs[sx] )
   
 
