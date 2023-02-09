@@ -4,6 +4,7 @@
 import pandas as pd
 #import numpy as np
 import matplotlib as mpl
+from os.path import exists
 #import matplotlib.colors as colors
 
 mpl.rc('text', usetex=True)
@@ -15,7 +16,7 @@ mpl.rc('font', size=10)
 # Note: header=6 is for NetLogo data
 
 exp_desc = 'cooperators-realizations-64-long'
-sxs = { 'vN' : "von Neumann", 'M': 'Moore', 'rvN' : 'random von Neumann', 'rM': 'random Moore'} #, 'rvNM': 'random von Neumann or random  Moore' }
+sxs = { 'vN' : "von Neumann", 'rvN' : 'random von Neumann', 'M': 'Moore', 'rM': 'random Moore'} #, 'rvNM': 'random von Neumann or random  Moore' }
 #sxs = { 'vN' : "von Neumann"}
 
 markers = ['o', 'x', 's', '^', '2']
@@ -24,11 +25,12 @@ colors = ['k--', 'r-.', 'b:', 'g-', 'm']
 #%% read data
 data = dict() 
 v = ['synergy-factor', '[step]', 'cooperators-fraction-mean', 'cooperators-fraction-std']
-df = dict()
-
-for sx in sxs :
-    data[sx] = pd.read_csv(exp_desc + '-' + sx + '.csv', header=0)
-    df[sx] = pd.DataFrame(columns=v)
+df = dict() # dcit of pandas dfs
+# %% save/load data
+if  not exists('data_' + exp_desc + '.h5'):
+  for sx in sxs :
+      data[sx] = pd.read_csv(exp_desc + '-' + sx + '.csv', header=0)
+      df[sx] = pd.DataFrame(columns=v)
 
 # select variables for the analysis 
 # this depends on the experiment
@@ -36,36 +38,52 @@ for sx in sxs :
 
 #%% values of the synergy factor
 # sfs = data["synergy-factor"].unique()[::2] # read from file
-sfs = [3.5, 3.6, 3.7, 3.8, 3.9, 4.0, 4.2, 4.5, 4.9, 5.2, 5.4, 5.5 ] # preselected values
-steps = data['vN']["[step]"].unique() # read from file
+sfs = [3.5, 3.6, 3.7, 3.8, 
+       4.0, 4.1, 4.2, 4.4, 
+       4.5, 4.7, 4.8, 4.9, 
+       5.0, 5.1, 5.3, 5.5 ] # some preselected values
+
 
 # skip some steps further on
-skip = 1024
+skip = 512
 
+# handle the step upper limit (based on experiments.xml)
+max_steps = 32768
 
-#%% data calculation
-for sx in sxs :
-    for sf in sfs:
-        for st in steps[::skip]:
-              df[sx].loc[len(df[sx].index)] = [
-                  sf,
-                  st,
-                  data[sx][(data[sx]["synergy-factor"] == sf) & (data[sx]["[step]"] == st)]["cooperators-fraction"].mean(),
-                  data[sx][(data[sx]["synergy-factor"] == sf) & (data[sx]["[step]"] == st)]["cooperators-fraction"].std()
-              ]
+# %% save/load data
+if  not exists('data_' + exp_desc + '.h5'):
+    steps = data['vN']["[step]"].unique() # read from file
+    #%% data calculation
+    for sx in sxs :
+        for sf in sfs:
+            for st in steps[::skip]:
+                  df[sx].loc[len(df[sx].index)] = [
+                      sf,
+                      st,
+                      data[sx][(data[sx]["synergy-factor"] == sf) & (data[sx]["[step]"] == st)]["cooperators-fraction"].mean(),
+                      data[sx][(data[sx]["synergy-factor"] == sf) & (data[sx]["[step]"] == st)]["cooperators-fraction"].std()
+                  ]
+    # save all dfs
+    for sx in sxs :
+        df[sx].to_hdf('data_' + exp_desc + '.h5', key=sx)  
+else:
+    for sx in sxs :
+        df[sx] = pd.read_hdf('data_' + exp_desc + '.h5', key=sx)  
+
 
 
 #%% plotting
-plot_data = dict()
+plot_data_mean = dict()
+plot_data_std = dict()
 
-fig = mpl.figure.Figure(figsize=(6.5, 6.5))
+fig = mpl.figure.Figure(figsize=(6.5, 8.0))
 for i, sf in enumerate(sfs):
-  axs = fig.add_subplot(3,4,i+1)
+  axs = fig.add_subplot(4,4,i+1)
   # axs.set_xscale("log", base=10)
   # axs.set_yscale("log", base=10)
   axs.set_ylim([0.0, 1.05])
   # axs.set_xlim([0.0, 100])
-  axs.set_xlim([1, max(steps)])
+  axs.set_xlim([1, max_steps])
   axs.set_xticks([0,10000,20000,30000])
   axs.set_yticks([0,0.25,0.5,0.75,1])
   axs.grid(True, linestyle=':', linewidth=0.5, c='k')
@@ -73,17 +91,21 @@ for i, sf in enumerate(sfs):
   if i % 4 != 0:
       axs.set_yticklabels([])
       
-  if i < 8:
+  if i < 12:
       axs.set_xticklabels([])
   else:
       axs.set_xticklabels(["0","1", "2", "3"])
       axs.set_xlabel(r"step $[\times 10^3]$")
       
   for i, sx in enumerate( sxs ) :
-      plot_data[sx] = df[sx][df[sx]['synergy-factor'] == sf][["[step]","cooperators-fraction-mean"]].to_numpy()
+      plot_data_mean[sx] = df[sx][df[sx]['synergy-factor'] == sf][["[step]","cooperators-fraction-mean"]].to_numpy()
+      plot_data_std[sx] = df[sx][df[sx]['synergy-factor'] == sf][["[step]","cooperators-fraction-std"]].to_numpy()
       axs.set_title(r"$r={}$".format(sf))
-
-      axs.plot(plot_data[sx].T[0], plot_data[sx].T[1],  colors[i], label = sxs[sx] )
+      
+      axs.fill_between(plot_data_mean[sx].T[0], 
+                       plot_data_mean[sx].T[1]+plot_data_std[sx].T[1], 
+                       plot_data_mean[sx].T[1]-plot_data_std[sx].T[1], color=colors[i][0], alpha=.25, linewidth=.35)
+      axs.plot(plot_data_mean[sx].T[0], plot_data_mean[sx].T[1],  colors[i], label = sxs[sx], linewidth=1)
   
 
   
