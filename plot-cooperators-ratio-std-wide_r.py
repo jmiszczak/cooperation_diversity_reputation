@@ -125,5 +125,5 @@ axs.legend(ncols=1,loc='best',fontsize='8')
 fig.tight_layout()
 display(fig)
 
-fig.savefig("plot_" + exp_desc + "-mean-std", format="pdf", bbox_inches='tight')
+fig.savefig("plot_" + exp_desc + "-mean-std.pdf", format="pdf", bbox_inches='tight')
 print("[INFO] Saving " + "plot_" + exp_desc + "-mean-std.pdf")
