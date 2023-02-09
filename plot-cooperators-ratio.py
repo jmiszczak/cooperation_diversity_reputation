@@ -9,7 +9,7 @@ import matplotlib.colors as colors
 
 mpl.rc('text', usetex=True)
 mpl.rc('font', family='serif')
-mpl.rc('font', size=10)
+mpl.rc('font', size=9)
 
 # %%
 # file with data from the experiment
@@ -19,7 +19,7 @@ exp_desc = 'cooperators-diversity'
 
 data = pd.read_csv(exp_desc + '.csv', header=6)
 
-sxs = { 'vN' : "von Neumann", 'M': 'Moore', 'rvN' : 'random von Neumann', 'rM': 'random Moore'} #, 'rvNM': 'random von Neumann or random  Moore' }
+sxs = { 'vN' : "von Neumann",  'rvN' : 'random von Neumann', 'M': 'Moore', 'rM': 'random Moore'} #, 'rvNM': 'random von Neumann or random  Moore' }
 #sxs = { 'vN' : "von Neumann"}
 
 markers = ['o', 'x', 's', '^', '2']
@@ -55,19 +55,19 @@ for v0 in var0s:
           
           
 # %% plot data
-fig = mpl.figure.Figure(figsize=(5, 4))
+fig = mpl.figure.Figure(figsize=(4, 3))
 axs = fig.add_subplot()
-for i, nt in enumerate( var1s):
+for i, nt in enumerate( list(sxs.values())):
 
     plot_data = df[df['neighborhood-type'] == nt][['synergy-factor', 'mean-cooperators-fraction']].to_numpy()
-    axs.plot(plot_data.T[0], plot_data.T[1], markers[i], label=nt,  linestyle='--', lw=0.75)
+    axs.plot(plot_data.T[0], plot_data.T[1], color=colors[i][0], marker=markers[i], fillstyle='none', markersize=4, label=nt,  linestyle='--', lw=0.75)
 
 
-axs.set_xlabel('synergy factor')
+axs.set_xlabel('synergy factor $r$')
 axs.set_ylabel('mean cooperators fraction')
 
 axs.grid(True, linestyle=':', linewidth=0.5, c='k')
-axs.legend(ncols=1,loc='lower right')
+axs.legend(ncols=1,loc='lower right',fontsize='8')
 
 # %%
 fig.tight_layout()
