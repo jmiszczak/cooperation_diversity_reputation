@@ -169,5 +169,26 @@
     <enumeratedValueSet variable="world-size">
       <value value="64"/>
     </enumeratedValueSet>
-  </experiment>
+ </experiment>
+
+ <experiment name="cooperators-final-128-long" repetitions="128" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="32768"/>
+    <metric>cooperators-fraction</metric>
+    <enumeratedValueSet variable="noise-factor">
+      <value value="0.5"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="synergy-factor" first="2.5" step="0.05" last="7.5"/>
+    <enumeratedValueSet variable="neighborhood-type">
+      <value value="&quot;von Neumann&quot;"/>
+      <value value="&quot;Moore&quot;"/>
+      <value value="&quot;random von Neumann&quot;"/>
+      <value value="&quot;random Moore&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="world-size">
+      <value value="64"/>
+    </enumeratedValueSet>
+ </experiment>
+
 </experiments>
