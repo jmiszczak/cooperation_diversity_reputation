@@ -4,7 +4,7 @@
 ## grante name
 #SBATCH -A plgopdyn0
 ## name of partition
-#SBATCH -p plgrid-now
+#SBATCH -p plgrid-long
 ## number of cores
 #SBATCH --ntasks-per-node=48
 ## file to which standard output will be redirected
