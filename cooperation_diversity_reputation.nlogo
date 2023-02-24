@@ -70,7 +70,11 @@ to go
       imitate-strategy-reputation
     ][
       ;; no prestige/reputation update, only strategy
-      imitate-strategy-reputation
+      ifelse imitation-policy = "linear" [
+        imitate-strategy-linear
+      ] [
+        imitate-strategy-fermi-dirac
+      ]
     ]
 
     ;; update colors of the visual representation - NOTE: this should be commented out by default
@@ -187,14 +191,27 @@ end
 ;; strategy update
 ;;
 ;; version without reputation
-to imitate-strategy
+to imitate-strategy-fermi-dirac
   ;; select one of the neighbors
   let my-neighbor one-of neighborhood
   let my-neighbor-income [ income ] of my-neighbor
 
   ;; select new strategy using Fermi-Dirac function
-  if ( random-float 1.0 ) * (1 + exp ( ( income - my-neighbor-income  ) * inv-noise-factor  ) )  < 1 [
+  if ( random-float 1.0 ) * (1 + exp ( ( income - my-neighbor-income  ) * inv-noise-factor  ) ) < 1 [
     set contribution [ contribution ] of my-neighbor
+  ]
+end
+
+to imitate-strategy-linear
+  ;; select one of the neighbors
+  let my-neighbor one-of neighborhood
+  let my-neighbor-income [ income ] of my-neighbor
+
+  ;; select new strategy using linear imitation
+  if income < my-neighbor-income [
+    if random-float 1.0 < ( income - my-neighbor-income ) / (1 + synergy-factor ) [
+      set contribution [ contribution ] of my-neighbor
+    ]
   ]
 end
 
@@ -348,13 +365,13 @@ NIL
 
 CHOOSER
 12
-227
+218
 205
-272
+263
 neighborhood-type
 neighborhood-type
 "von Neumann" "Moore" "von Neumann or Moore" "random von Neumann" "random Moore" "random von Neumann or Moore"
-3
+0
 
 BUTTON
 118
@@ -401,7 +418,7 @@ synergy-factor
 synergy-factor
 0
 10
-4.6
+4.0
 0.1
 1
 NIL
@@ -434,10 +451,10 @@ mean-cooperators1k
 11
 
 SLIDER
-11
-350
-207
-383
+7
+380
+203
+413
 reputation-updating-p
 reputation-updating-p
 0
@@ -449,10 +466,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-11
-398
-205
-431
+7
+428
+201
+461
 reputation-threshold
 reputation-threshold
 0
@@ -464,10 +481,10 @@ NIL
 HORIZONTAL
 
 SWITCH
-13
-302
-204
-335
+9
+332
+200
+365
 utilize-reputation
 utilize-reputation
 0
@@ -475,10 +492,10 @@ utilize-reputation
 -1000
 
 SLIDER
-9
-442
-204
-475
+5
+472
+200
+505
 reputation-update
 reputation-update
 1
@@ -499,6 +516,16 @@ cooperators-fraction
 4
 1
 11
+
+CHOOSER
+11
+272
+201
+317
+imitation-policy
+imitation-policy
+"fermi-dirac" "linear"
+0
 
 @#$#@#$#@
 ## WHAT IS IT?
