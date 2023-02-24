@@ -9,7 +9,7 @@ import matplotlib.colors as colors
 
 mpl.rc('text', usetex=True)
 mpl.rc('font', family='serif')
-mpl.rc('font', size=10)
+mpl.rc('font', size=9)
 
 # %%
 # file with data from the experiment
@@ -19,8 +19,8 @@ exp_desc = 'cooperators-diversity'
 
 data = pd.read_csv(exp_desc + '.csv', header=6)
 
-#sxs = { 'vN' : "von Neumann", 'M': 'Moore', 'rvN' : 'random von Neumann', 'rM': 'random Moore'} #, 'rvNM': 'random von Neumann or random  Moore' }
-sxs = { 'vN' : "von Neumann"}
+sxs = { 'vN' : "von Neumann",  'rvN' : 'random von Neumann', 'M': 'Moore', 'rM': 'random Moore'} #, 'rvNM': 'random von Neumann or random  Moore' }
+#sxs = { 'vN' : "von Neumann"}
 
 markers = ['o', 'x', 's', '^', '2']
 colors = ['k--', 'r-.', 'b:', 'g-', 'm']
@@ -36,8 +36,10 @@ v = [ 'synergy-factor', 'neighborhood-type', 'world-size', 'mean-cooperators-fra
 
 # NOTE: start with some subset of data
 var0s = data['synergy-factor'].unique()
-var1s = data['neighborhood-type'].unique()[:1]
+var1s = data['neighborhood-type'].unique()[:4]
 var2s = data['world-size'].unique()[:1]
+
+exp_desc = exp_desc + '_' + str( var2s[0] )
 
 df = pd.DataFrame(columns=v)
 
@@ -53,4 +55,22 @@ for v0 in var0s:
           
           
 # %% plot data
+fig = mpl.figure.Figure(figsize=(4, 3))
+axs = fig.add_subplot()
+for i, nt in enumerate( list(sxs.values())):
 
+    plot_data = df[df['neighborhood-type'] == nt][['synergy-factor', 'mean-cooperators-fraction']].to_numpy()
+    axs.plot(plot_data.T[0], plot_data.T[1], color=colors[i][0], marker=markers[i], fillstyle='none', markersize=4, label=nt,  linestyle='--', lw=0.75)
+
+
+axs.set_xlabel('synergy factor $r$')
+axs.set_ylabel('mean cooperators fraction')
+
+axs.grid(True, linestyle=':', linewidth=0.5, c='k')
+axs.legend(ncols=1,loc='lower right',fontsize='8')
+
+# %%
+fig.tight_layout()
+display(fig)
+
+fig.savefig("plot_" + exp_desc + ".pdf", format="pdf", bbox_inches='tight')
