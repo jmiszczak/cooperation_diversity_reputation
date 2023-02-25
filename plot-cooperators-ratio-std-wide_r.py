@@ -15,7 +15,7 @@ mpl.rc('font', size=9)
 # file with data from the experiment
 # Note: header=6 is for NetLogo data
 
-exp_desc = 'cooperators-realizations-64-long-final'
+exp_desc = 'cooperators-final-long-128-v1'
 
 data = pd.read_csv(exp_desc + '.csv', header=6)
 
