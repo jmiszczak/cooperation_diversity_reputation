@@ -43,6 +43,10 @@ sfs = [3.5, 3.6, 3.7, 3.8,
        4.5, 4.7, 4.8, 4.9, 
        5.0, 5.1, 5.3, 5.5 ] # some preselected values
 
+sfs = [
+       4.5, 4.7, 4.8, 4.9, 
+       5.0, 5.1, 5.3, 5.5 ] # some preselected values
+
 
 # skip some steps further on
 skip = 512
@@ -91,7 +95,7 @@ for i, sf in enumerate(sfs):
   if i % 4 != 0:
       axs.set_yticklabels([])
       
-  if i < 12:
+  if i < len(sfs)-4:
       axs.set_xticklabels([])
   else:
       axs.set_xticklabels(["0","1", "2", "3"])
