@@ -171,7 +171,7 @@
     </enumeratedValueSet>
  </experiment>
 
- <experiment name="cooperators-final-128-long" repetitions="128" runMetricsEveryStep="false">
+ <experiment name="cooperators-final-long-128-v1" repetitions="128" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <timeLimit steps="32768"/>
