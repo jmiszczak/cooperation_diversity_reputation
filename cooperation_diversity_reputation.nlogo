@@ -1,6 +1,6 @@
-;;
+;;------------------------------------------------------------------------------------
 ;; patches atributes
-;;
+;;------------------------------------------------------------------------------------
 patches-own [
   contribution ;; player's contribution: 1 - contributor, green, 0 - free-rider, black
   income ;; income from the last round
@@ -9,7 +9,9 @@ patches-own [
   prestige ;; Good (1) or Bad (0)
 ]
 
-;; cooperators fraction in last 1000 steps
+;;------------------------------------------------------------------------------------
+;; global variables
+;;------------------------------------------------------------------------------------
 globals [
   cooperators1k
   inv-noise-factor
@@ -22,9 +24,9 @@ globals [
 
 ]
 
-;;
+;;------------------------------------------------------------------------------------
 ;; setup the world
-;;
+;;------------------------------------------------------------------------------------
 to setup
   ;; initial cleanup
   clear-all
@@ -50,14 +52,51 @@ to setup
   reset-ticks
 end
 
-;;
+;;------------------------------------------------------------------------------------
 ;; main subroutine
-;;
+;;------------------------------------------------------------------------------------
 to go
-  ;; play the public goods game for all turtles
+  ;; check if the neighborhoods should be chooes each round
+  ;; TODO: implement random selection of patches
+  if reevaluate-neighborhood [
+    ask patches [
+      choose-random-neighborhood
+    ]
+  ]
+
+  ;; play the public goods game for all patches
   ask patches [
     play-pgg
   ]
+
+  ;; if we are using reputation
+  ;; update the reputation
+  if utilize-reputation [
+    ask patches [
+      ;; update the prestige with some probability
+      if random-float 1.0 < reputation-updating-p [
+        update-prestige
+        update-reputation
+      ]
+    ]
+  ]
+
+  ;; imitate the strategy using the selecedt policy
+  (ifelse imitation-policy = "linear" [
+    ask patches [
+      imitate-strategy-linear
+    ]
+  ] imitation-policy = "fermi-dirac" [
+    ask patches [
+      imitate-strategy-fermi-dirac
+    ]
+  ] utilize-reputation [
+    ask patches [
+      imitate-strategy-reputation
+    ]
+    ]
+  )
+
   ;; udate the strategy using the cumulative income from the round
   ask patches [
     ifelse utilize-reputation [
@@ -91,9 +130,9 @@ to go
 
 end
 
-;;
+;;------------------------------------------------------------------------------------
 ;; world initialization
-;;
+;;------------------------------------------------------------------------------------
 to setup-world
   ;; make the world with custom size
   resize-world 0 (world-size - 1) 0 (world-size - 1)
@@ -108,35 +147,17 @@ to setup-world
   ]
 end
 
-;;
+;;------------------------------------------------------------------------------------
 ;; setup routine
-;; contains selection of the initial strategies
-;;
+;; contains
+;; - selection of the initial strategies,
+;; - initial neighborhood,
+;; - initial reputation
+;;------------------------------------------------------------------------------------
 to setup-patches
   ask patches [
-
-    ;; choose which neighborhood to use
-    (ifelse neighborhood-type = "von Neumann" [
-      set neighborhood neighbors4
-    ] neighborhood-type = "Moore" [
-      set neighborhood neighbors
-    ] neighborhood-type = "random von Neumann" [
-      set neighborhood n-of (1 + random 4 ) neighbors4
-    ] neighborhood-type = "random Moore" [
-      set neighborhood n-of (1 + random 8 ) neighbors
-    ] neighborhood-type = "random von Neumann or Moore" [
-      ifelse random 1 = 0 [
-        set neighborhood n-of (1 + random 8 ) neighbors
-      ][
-        set neighborhood n-of (1 + random 4 ) neighbors4
-      ]
-    ] neighborhood-type = "von Neumann or Moore" [
-      ifelse random 1 = 0 [
-        set neighborhood neighbors
-      ][
-        set neighborhood neighbors4
-      ]
-    ])
+    ;; initail assignement of the neighborhood
+    choose-neighborhood
 
     ;; initialize the income
     set income 0
@@ -160,9 +181,44 @@ to setup-patches
   ]
 end
 
-;;
+;;------------------------------------------------------------------------------------
+;; select random patches as neighbors
+;;------------------------------------------------------------------------------------
+to choose-random-neighborhood
+  set neighborhood n-of 4 patches
+end
+
+;;------------------------------------------------------------------------------------
+;; select near patches of some type
+;;-----------------------------------------------------------------------------------
+to choose-neighborhood
+  ;; choose which neighborhood to use
+  (ifelse neighborhood-type = "von Neumann" [
+    set neighborhood neighbors4
+  ] neighborhood-type = "Moore" [
+    set neighborhood neighbors
+  ] neighborhood-type = "random von Neumann" [
+    set neighborhood n-of (1 + random 4 ) neighbors4
+  ] neighborhood-type = "random Moore" [
+    set neighborhood n-of (1 + random 8 ) neighbors
+  ] neighborhood-type = "random von Neumann or Moore" [
+    ifelse random 1 = 0 [
+      set neighborhood n-of (1 + random 8 ) neighbors
+    ][
+      set neighborhood n-of (1 + random 4 ) neighbors4
+    ]
+  ] neighborhood-type = "von Neumann or Moore" [
+    ifelse random 1 = 0 [
+      set neighborhood neighbors
+    ][
+      set neighborhood neighbors4
+    ]
+  ])
+end
+
+;;------------------------------------------------------------------------------------
 ;; helper function to update visual aspects of turtles
-;;
+;;------------------------------------------------------------------------------------
 to update-colors
   ifelse contribution = 1 [
     set pcolor green
@@ -171,9 +227,9 @@ to update-colors
   ]
 end
 
-;;
+;;------------------------------------------------------------------------------------
 ;; evolution routine
-;;
+;;------------------------------------------------------------------------------------
 to play-pgg
 
   ;; calculate the payoff
@@ -187,10 +243,13 @@ to play-pgg
 
 end
 
-;;
-;; strategy update
-;;
-;; version without reputation
+;;------------------------------------------------------------------------------------
+;; strategy update policies
+;;------------------------------------------------------------------------------------
+
+;;------------------------------------------------------------------------------------
+;; version with F-D function, without reputation
+;;------------------------------------------------------------------------------------
 to imitate-strategy-fermi-dirac
   ;; select one of the neighbors
   let my-neighbor one-of neighborhood
@@ -202,6 +261,9 @@ to imitate-strategy-fermi-dirac
   ]
 end
 
+;;------------------------------------------------------------------------------------
+;; version with linear imitation, without reputation
+;;------------------------------------------------------------------------------------
 to imitate-strategy-linear
   ;; select one of the neighbors
   let my-neighbor one-of neighborhood
@@ -209,13 +271,15 @@ to imitate-strategy-linear
 
   ;; select new strategy using linear imitation
   if income < my-neighbor-income [
-    if random-float 1.0 < ( income - my-neighbor-income ) / (1 + synergy-factor ) [
+    if random-float 1.0 < ( my-neighbor-income - income ) / (1 + synergy-factor ) [
       set contribution [ contribution ] of my-neighbor
     ]
   ]
 end
 
-;; version based on the reputation
+;;------------------------------------------------------------------------------------
+;; version based on the reputation and F-D function
+;;------------------------------------------------------------------------------------
 to imitate-strategy-reputation
 
   ;; select one of the neighbors
@@ -239,7 +303,13 @@ to imitate-strategy-reputation
 
 end
 
+;;------------------------------------------------------------------------------------
 ;; reputation and prestige update
+;;------------------------------------------------------------------------------------
+
+;;------------------------------------------------------------------------------------
+;; prestige
+;;------------------------------------------------------------------------------------
 to update-prestige
 
   ;; update the prestige accordig to the erned reputation
@@ -251,7 +321,9 @@ to update-prestige
 
 end
 
+;;------------------------------------------------------------------------------------
 ;; adaptive reputation update
+;;------------------------------------------------------------------------------------
 to update-reputation
   (ifelse
     prestige = good and contribution = cooperator
@@ -283,14 +355,15 @@ to update-reputation
 
 end
 
-;;
+;;------------------------------------------------------------------------------------
 ;; reporters
-;;
+;;------------------------------------------------------------------------------------
 
 to-report cooperators-fraction
   report count patches with [ contribution = 1 ] / count patches
 end
 
+;; cooperators fraction in last 1000 steps
 to update-cooperators1k
   ;; add current vale of cooperators-fraction to the list cooperators1k
   set cooperators1k fput cooperators-fraction cooperators1k
@@ -379,8 +452,8 @@ BUTTON
 193
 105
 Go
-repeat 4096 [ go ]\n
-NIL
+go\n
+T
 1
 T
 OBSERVER
@@ -418,7 +491,7 @@ synergy-factor
 synergy-factor
 0
 10
-4.0
+5.9
 0.1
 1
 NIL
@@ -451,10 +524,10 @@ mean-cooperators1k
 11
 
 SLIDER
-7
-380
-203
-413
+11
+435
+207
+468
 reputation-updating-p
 reputation-updating-p
 0
@@ -466,10 +539,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-7
-428
-201
-461
+11
+483
+205
+516
 reputation-threshold
 reputation-threshold
 0
@@ -481,21 +554,21 @@ NIL
 HORIZONTAL
 
 SWITCH
-9
-332
-200
-365
+13
+387
+204
+420
 utilize-reputation
 utilize-reputation
-0
+1
 1
 -1000
 
 SLIDER
-5
-472
-200
-505
+9
+527
+204
+560
 reputation-update
 reputation-update
 1
@@ -525,7 +598,18 @@ CHOOSER
 imitation-policy
 imitation-policy
 "fermi-dirac" "linear"
+1
+
+SWITCH
+13
+331
+253
+364
+reevaluate-neighborhood
+reevaluate-neighborhood
 0
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
