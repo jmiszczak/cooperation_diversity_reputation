@@ -57,8 +57,7 @@ end
 ;;------------------------------------------------------------------------------------
 to go
   ;; check if the neighborhoods should be chooes each round
-  ;; TODO: implement random selection of patches
-  if reevaluate-neighborhood [
+  if random-float 1.0 < p-rev   [
     ask patches [
       choose-random-neighborhood
     ]
@@ -157,7 +156,7 @@ end
 to setup-patches
   ask patches [
     ;; initail assignement of the neighborhood
-    choose-neighborhood
+    choose-random-neighborhood
 
     ;; initialize the income
     set income 0
@@ -491,7 +490,7 @@ synergy-factor
 synergy-factor
 0
 10
-5.9
+4.6
 0.1
 1
 NIL
@@ -598,18 +597,33 @@ CHOOSER
 imitation-policy
 imitation-policy
 "fermi-dirac" "linear"
-1
+0
 
 SWITCH
 13
 331
-253
+209
 364
-reevaluate-neighborhood
-reevaluate-neighborhood
+reevaluate-neighborhs
+reevaluate-neighborhs
 0
 1
 -1000
+
+SLIDER
+233
+390
+405
+423
+p-rev
+p-rev
+0
+0.01
+0.001
+0.001
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
