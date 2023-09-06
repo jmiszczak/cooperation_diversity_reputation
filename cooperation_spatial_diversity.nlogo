@@ -5,8 +5,7 @@ patches-own [
   contribution ;; player's contribution: 1 - contributor, green, 0 - free-rider, black
   income ;; income from the last round
   neighborhood ;; group of players used for playng the game
-  reputation ;; reputation - used to calculate the prestige (Good or Bad) of the player
-  prestige ;; Good (1) or Bad (0)
+  roaming? ;; should the agent reevaluate the neigbours
 ]
 
 ;;------------------------------------------------------------------------------------
@@ -51,7 +50,9 @@ to go
   ;; check if the neighborhoods should be chooes each round
   if random-float 1.0 < p-rev   [
     ask patches [
-      choose-neighborhood
+      if roaming? [
+        choose-neighborhood
+      ]
     ]
   ]
 
@@ -126,10 +127,17 @@ to setup-patches
     ;; initialize the income
     set income 0
     ;; randomly assign initial strategies
-    ifelse random-float 1.0 < 0.25 [
+    ifelse random-float 1.0 < 0.5 [
       set contribution 1 ;; cooperator
     ] [
       set contribution 0 ;; no contribution, free-rider
+    ]
+
+    ifelse random-float 1.0 < raoming-agents [
+      set roaming? true ;; agent changing the neighbours
+      set plabel "R"
+    ] [
+      set roaming? false ;; no reevaluation
     ]
 
     update-colors
@@ -228,38 +236,17 @@ to imitate-strategy-linear
 end
 
 ;;------------------------------------------------------------------------------------
-;; version based on the reputation and F-D function
-;;------------------------------------------------------------------------------------
-to imitate-strategy-reputation
-
-  ;; select one of the neighbors
-  let my-neighbor one-of neighborhood
-
-  ;; check its income and strategy
-  let my-neighbor-income [ income ] of my-neighbor
-  let my-neighbor-contribution [ contribution ] of my-neighbor
-
-  ;; check its prestige
-  let my-neighbor-prestige [ prestige ] of my-neighbor
-    let imitation-susceptibility 1
-  if my-neighbor-prestige = 0 [
-    set imitation-susceptibility 0.01
-  ]
-
-  ;; select new strategy using Fermi-Dirac function with prestige-based susceptibility
-  if ( random-float 1.0 ) * (1 + exp ( ( income - my-neighbor-income  ) * inv-noise-factor  ) )  < imitation-susceptibility [
-    set contribution [ contribution ] of my-neighbor
-  ]
-
-end
-
-;;------------------------------------------------------------------------------------
 ;; reporters
 ;;------------------------------------------------------------------------------------
 
 ;; fraction of cooperators
 to-report cooperators-fraction
   report count patches with [ contribution = 1 ] / count patches
+end
+
+;; fraction of cooperators whcih reevaluate their neigbourhoods
+to-report roaming-cooperators-fraction
+  report count patches with [ roaming? = true and contribution = 1 ] / count patches with [ roaming? = true ]
 end
 
 ;; fraction of cooperators in last 1000 steps
@@ -352,7 +339,7 @@ BUTTON
 193
 105
 Go
-repeat 2048 [go]\n
+repeat 32768 [go]\n
 NIL
 1
 T
@@ -364,10 +351,10 @@ NIL
 0
 
 PLOT
-770
-21
-1133
-292
+608
+15
+861
+182
 Cooperation factor
 time step
 fraction of cooperators
@@ -390,9 +377,9 @@ SLIDER
 synergy-factor
 synergy-factor
 0
-10
-4.4
-0.1
+16
+3.85
+0.05
 1
 NIL
 HORIZONTAL
@@ -413,10 +400,10 @@ NIL
 HORIZONTAL
 
 MONITOR
-980
-333
-1129
-378
+772
+193
+921
+238
 NIL
 mean-cooperators1k
 3
@@ -424,10 +411,10 @@ mean-cooperators1k
 11
 
 MONITOR
-769
-333
-916
-378
+607
+193
+754
+238
 cooperators fraction
 cooperators-fraction
 4
@@ -453,8 +440,8 @@ p-rev
 p-rev
 0.0
 1
-0.1
-0.01
+0.45
+0.05
 1
 NIL
 HORIZONTAL
@@ -468,11 +455,55 @@ random-patches-number
 random-patches-number
 2
 16
-8.0
+5.0
 1
 1
 NIL
 HORIZONTAL
+
+SLIDER
+15
+416
+187
+449
+raoming-agents
+raoming-agents
+0
+1
+1.0
+0.05
+1
+NIL
+HORIZONTAL
+
+MONITOR
+939
+194
+1087
+239
+NIL
+roaming-cooperators-fraction
+6
+1
+11
+
+PLOT
+872
+15
+1105
+183
+Roaming cooperators
+NIL
+NIL
+0.0
+32768.0
+0.0
+1.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot roaming-cooperators-fraction"
 
 @#$#@#$#@
 ## WHAT IS IT?
