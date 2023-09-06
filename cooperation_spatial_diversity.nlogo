@@ -162,7 +162,7 @@ to choose-neighborhood
       set neighborhood neighbors4
     ]
   ] neighborhood-type = "random patches" [
-     set neighborhood n-of (1 + random 4 ) patches
+     set neighborhood n-of (1 + random random-patches-number ) patches
   ])
 end
 
@@ -280,11 +280,11 @@ end
 GRAPHICS-WINDOW
 229
 10
-437
-219
+589
+371
 -1
 -1
-20.0
+11.0
 1
 10
 1
@@ -295,11 +295,11 @@ GRAPHICS-WINDOW
 1
 1
 0
-9
+31
 0
-9
-1
-1
+31
+0
+0
 1
 ticks
 30.0
@@ -313,7 +313,7 @@ world-size
 world-size
 1
 200
-10.0
+32.0
 1
 1
 NIL
@@ -344,7 +344,7 @@ CHOOSER
 neighborhood-type
 neighborhood-type
 "von Neumann" "Moore" "von Neumann or Moore" "random von Neumann" "random Moore" "random von Neumann or Moore" "random patches"
-0
+6
 
 BUTTON
 118
@@ -352,7 +352,7 @@ BUTTON
 193
 105
 Go
-repeat 10 [go]\n
+repeat 2048 [go]\n
 NIL
 1
 T
@@ -372,7 +372,7 @@ Cooperation factor
 time step
 fraction of cooperators
 0.0
-16384.0
+32768.0
 0.0
 1.0
 true
@@ -391,7 +391,7 @@ synergy-factor
 synergy-factor
 0
 10
-10.0
+4.4
 0.1
 1
 NIL
@@ -404,9 +404,9 @@ SLIDER
 152
 noise-factor
 noise-factor
-0.05
+0.25
 20
-0.05
+0.5
 0.05
 1
 NIL
@@ -435,26 +435,41 @@ cooperators-fraction
 11
 
 CHOOSER
-11
-272
-201
-317
+10
+307
+200
+352
 imitation-policy
 imitation-policy
 "fermi-dirac" "linear"
 0
 
 SLIDER
-16
-337
-188
-370
+15
+372
+187
+405
 p-rev
 p-rev
 0.0
 1
-0.0
+0.1
 0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+10
+268
+204
+301
+random-patches-number
+random-patches-number
+2
+16
+8.0
+1
 1
 NIL
 HORIZONTAL
