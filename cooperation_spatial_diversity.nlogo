@@ -51,7 +51,7 @@ to go
   ;; check if the neighborhoods should be chooes each round
   if random-float 1.0 < p-rev   [
     ask patches [
-      choose-random-neighborhood
+      choose-neighborhood
     ]
   ]
 
@@ -108,8 +108,6 @@ to setup-world
   ask patches [
     ;; make all patches white
     set pcolor white
-    ;; add one turtle to each patch
-    ;;sprout 1
   ]
 end
 
@@ -123,35 +121,19 @@ end
 to setup-patches
   ask patches [
     ;; initail assignement of the neighborhood
-    choose-random-neighborhood
+    choose-neighborhood
 
     ;; initialize the income
     set income 0
     ;; randomly assign initial strategies
-    ifelse random-float 1.0 < 0.5 [
+    ifelse random-float 1.0 < 0.25 [
       set contribution 1 ;; cooperator
     ] [
       set contribution 0 ;; no contribution, free-rider
     ]
 
-    ;; initialize the reputation and the prestige
-    set reputation random 100
-
-    ifelse random-float 1.0 < 0.5 [
-      set prestige 1 ;; Good
-    ] [
-      set prestige 0 ;; bad
-    ]
-
     update-colors
   ]
-end
-
-;;------------------------------------------------------------------------------------
-;; select random patches as neighbors
-;;------------------------------------------------------------------------------------
-to choose-random-neighborhood
-  set neighborhood n-of 4 patches
 end
 
 ;;------------------------------------------------------------------------------------
@@ -179,6 +161,8 @@ to choose-neighborhood
     ][
       set neighborhood neighbors4
     ]
+  ] neighborhood-type = "random patches" [
+     set neighborhood n-of (1 + random 4 ) patches
   ])
 end
 
@@ -206,7 +190,7 @@ to play-pgg
   ask neighborhood [
     set income income + game-gain - contribution
   ]
-
+ ;; show income
 end
 
 ;;------------------------------------------------------------------------------------
@@ -214,7 +198,7 @@ end
 ;;------------------------------------------------------------------------------------
 
 ;;------------------------------------------------------------------------------------
-;; version with F-D function, without reputation
+;; version with F-D function
 ;;------------------------------------------------------------------------------------
 to imitate-strategy-fermi-dirac
   ;; select one of the neighbors
@@ -228,7 +212,7 @@ to imitate-strategy-fermi-dirac
 end
 
 ;;------------------------------------------------------------------------------------
-;; version with linear imitation, without reputation
+;; version with linear imitation
 ;;------------------------------------------------------------------------------------
 to imitate-strategy-linear
   ;; select one of the neighbors
@@ -273,16 +257,18 @@ end
 ;; reporters
 ;;------------------------------------------------------------------------------------
 
+;; fraction of cooperators
 to-report cooperators-fraction
   report count patches with [ contribution = 1 ] / count patches
 end
 
-;; cooperators fraction in last 1000 steps
+;; fraction of cooperators in last 1000 steps
 to update-cooperators1k
   ;; add current vale of cooperators-fraction to the list cooperators1k
   set cooperators1k fput cooperators-fraction cooperators1k
 end
 
+;; average fraction of cooperators in last 1000 steps
 to-report mean-cooperators1k
   ifelse ticks >= 1000 [
     report mean ( sublist cooperators1k 0 1000 )
@@ -294,11 +280,11 @@ end
 GRAPHICS-WINDOW
 229
 10
-589
-371
+437
+219
 -1
 -1
-11.0
+20.0
 1
 10
 1
@@ -309,9 +295,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-31
+9
 0
-31
+9
 1
 1
 1
@@ -327,7 +313,7 @@ world-size
 world-size
 1
 200
-32.0
+10.0
 1
 1
 NIL
@@ -357,8 +343,8 @@ CHOOSER
 263
 neighborhood-type
 neighborhood-type
-"von Neumann" "Moore" "von Neumann or Moore" "random von Neumann" "random Moore" "random von Neumann or Moore"
-2
+"von Neumann" "Moore" "von Neumann or Moore" "random von Neumann" "random Moore" "random von Neumann or Moore" "random patches"
+0
 
 BUTTON
 118
@@ -366,8 +352,8 @@ BUTTON
 193
 105
 Go
-go\n
-T
+repeat 10 [go]\n
+NIL
 1
 T
 OBSERVER
@@ -405,7 +391,7 @@ synergy-factor
 synergy-factor
 0
 10
-4.3
+10.0
 0.1
 1
 NIL
@@ -420,7 +406,7 @@ noise-factor
 noise-factor
 0.05
 20
-0.5
+0.05
 0.05
 1
 NIL
@@ -456,7 +442,7 @@ CHOOSER
 imitation-policy
 imitation-policy
 "fermi-dirac" "linear"
-1
+0
 
 SLIDER
 16
@@ -467,7 +453,7 @@ p-rev
 p-rev
 0.0
 1
-0.1
+0.0
 0.01
 1
 NIL
