@@ -48,13 +48,11 @@ end
 ;;------------------------------------------------------------------------------------
 to go
   ;; check if the neighborhoods should be chooes each round
-  if random-float 1.0 < p-rev   [
     ask patches [
       if roaming? [
         choose-neighborhood
       ]
     ]
-  ]
 
   ;; play the public goods game for all patches
   ask patches [
@@ -104,7 +102,7 @@ to setup-world
   ;; make the world with custom size
   resize-world 0 (world-size - 1) 0 (world-size - 1)
   ;; heuristic scaling of the patch size
-  set-patch-size floor ( 64 / (sqrt world-size) )
+  set-patch-size floor ( 50 / (sqrt world-size) )
 
   ask patches [
     ;; make all patches white
@@ -135,7 +133,7 @@ to setup-patches
 
     ifelse random-float 1.0 < raoming-agents [
       set roaming? true ;; agent changing the neighbours
-      set plabel "R"
+      set plabel "*"
     ] [
       set roaming? false ;; no reevaluation
     ]
@@ -267,11 +265,11 @@ end
 GRAPHICS-WINDOW
 229
 10
-589
-371
+621
+403
 -1
 -1
-11.0
+6.0
 1
 10
 1
@@ -282,9 +280,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-31
+63
 0
-31
+63
 0
 0
 1
@@ -300,17 +298,17 @@ world-size
 world-size
 1
 200
-32.0
+64.0
 1
 1
 NIL
 HORIZONTAL
 
 BUTTON
-13
-73
-87
-106
+12
+68
+107
+101
 Setup
 setup
 NIL
@@ -326,7 +324,7 @@ NIL
 CHOOSER
 12
 218
-205
+203
 263
 neighborhood-type
 neighborhood-type
@@ -334,13 +332,13 @@ neighborhood-type
 6
 
 BUTTON
-118
-72
-193
-105
+117
+69
+201
+102
 Go
-repeat 32768 [go]\n
-NIL
+go
+T
 1
 T
 OBSERVER
@@ -351,10 +349,10 @@ NIL
 0
 
 PLOT
-608
-15
-861
-182
+648
+12
+901
+179
 Cooperation factor
 time step
 fraction of cooperators
@@ -370,25 +368,25 @@ PENS
 "pen-1" 1.0 0 -7500403 true "" "plot mean-cooperators1k"
 
 SLIDER
-14
-168
-206
-201
+12
+162
+202
+195
 synergy-factor
 synergy-factor
 0
 16
-3.85
+3.2
 0.05
 1
 NIL
 HORIZONTAL
 
 SLIDER
-16
-119
-208
-152
+12
+115
+201
+148
 noise-factor
 noise-factor
 0.25
@@ -400,10 +398,10 @@ NIL
 HORIZONTAL
 
 MONITOR
-772
-193
-921
-238
+649
+254
+898
+299
 NIL
 mean-cooperators1k
 3
@@ -411,9 +409,9 @@ mean-cooperators1k
 11
 
 MONITOR
-607
+648
 193
-754
+898
 238
 cooperators fraction
 cooperators-fraction
@@ -432,24 +430,9 @@ imitation-policy
 0
 
 SLIDER
-15
-372
-187
-405
-p-rev
-p-rev
-0.0
-1
-0.45
-0.05
-1
-NIL
-HORIZONTAL
-
-SLIDER
-10
+11
 268
-204
+205
 301
 random-patches-number
 random-patches-number
@@ -462,48 +445,19 @@ NIL
 HORIZONTAL
 
 SLIDER
-15
-416
-187
-449
+11
+361
+201
+394
 raoming-agents
 raoming-agents
 0
 1
-1.0
+0.0
 0.05
 1
 NIL
 HORIZONTAL
-
-MONITOR
-939
-194
-1087
-239
-NIL
-roaming-cooperators-fraction
-6
-1
-11
-
-PLOT
-872
-15
-1105
-183
-Roaming cooperators
-NIL
-NIL
-0.0
-32768.0
-0.0
-1.0
-true
-false
-"" ""
-PENS
-"default" 1.0 0 -16777216 true "" "plot roaming-cooperators-fraction"
 
 @#$#@#$#@
 ## WHAT IS IT?
