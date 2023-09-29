@@ -255,8 +255,8 @@ end
 
 ;; average fraction of cooperators in last 1000 steps
 to-report mean-cooperators1k
-  ifelse ticks >= 1000 [
-    report mean ( sublist cooperators1k 0 1000 )
+  ifelse ticks >= 1024  [
+    report mean ( sublist cooperators1k 0 1024 )
   ][
     report 0
   ]
@@ -427,7 +427,7 @@ CHOOSER
 imitation-policy
 imitation-policy
 "fermi-dirac" "linear"
-0
+1
 
 SLIDER
 11
@@ -808,53 +808,24 @@ NetLogo 6.3.0
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="cooperators-stationary-synergy-200" repetitions="100" runMetricsEveryStep="false">
+  <experiment name="base-experiment" repetitions="8192" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
-    <timeLimit steps="5000"/>
     <metric>mean-cooperators1k</metric>
+    <steppedValueSet variable="raoming-agents" first="0" step="0.05" last="0.25"/>
+    <steppedValueSet variable="random-patches-number" first="2" step="1" last="8"/>
     <enumeratedValueSet variable="noise-factor">
       <value value="0.5"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="synergy-factor" first="2" step="0.1" last="5.5"/>
+    <steppedValueSet variable="synergy-factor" first="3" step="0.1" last="7"/>
     <enumeratedValueSet variable="neighborhood-type">
-      <value value="&quot;von Neumann&quot;"/>
-      <value value="&quot;Moore&quot;"/>
-      <value value="&quot;random von Neumann&quot;"/>
-      <value value="&quot;random Moore&quot;"/>
-      <value value="&quot;random von Neumann or Moore&quot;"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="world-size">
-      <value value="200"/>
-    </enumeratedValueSet>
-  </experiment>
-  <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">
-    <setup>setup</setup>
-    <go>go</go>
-    <metric>count turtles</metric>
-    <enumeratedValueSet variable="utilize-reputation">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="neighborhood-type">
-      <value value="&quot;random von Neumann&quot;"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="reputation-updating-p">
-      <value value="0.1"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="noise-factor">
-      <value value="0.5"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="synergy-factor">
-      <value value="4.6"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="reputation-threshold">
-      <value value="60"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="reputation-update">
-      <value value="3"/>
+      <value value="&quot;random patches&quot;"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="world-size">
       <value value="64"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="imitation-policy">
+      <value value="&quot;fermi-dirac&quot;"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>
