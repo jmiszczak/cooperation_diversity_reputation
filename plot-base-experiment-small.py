@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 # %% initial imports
 import pandas as pd
-#import numpy as np
+import numpy as np
 import matplotlib as mpl
 from os.path import exists
-#import matplotlib.colors as colors
+import matplotlib.colors as colors
 
 mpl.rc('text', usetex=True)
 mpl.rc('font', family='serif')
@@ -19,8 +19,6 @@ exp_desc = 'base-experiment-small'
 #sxs = { 'vN' : "von Neumann", 'rvN' : 'random von Neumann', 'M': 'Moore', 'rM': 'random Moore'} #, 'rvNM': 'random von Neumann or random  Moore' }
 #sxs = { 'vN' : "von Neumann"}
 
-markers = ['o', 'x', 's', '^', '2']
-colors = ['k--', 'r-.', 'b:', 'g-', 'm']
 
 #%% read data
 #data = dict() 
@@ -44,21 +42,46 @@ for v0 in var0s:
             ]
 
 
+#%% plot 
+levels = np.arange(0,1.1,0.1)
 
-fig = mpl.figure.Figure(figsize=(4, 3))
-axs = fig.add_subplot()
 
-levels = [0, 0.2, 0.4, 1]
+fig = mpl.figure.Figure(figsize=(8, 3))
+for i, v0 in enumerate(var0s):
+  print(v0)
 
-plot_data = df[[v[1], v[2], v[3]]].to_numpy()
 
-axs.contourf(
-  plot_data,
-  levels=3,
-  colors='k',
-  linestyles='dotted'
-  )
+  axs = fig.add_subplot(121+i);
+  
+  
+  plot_data = df[df[v[0]] == v0][[v[1], v[2], v[3]]].to_numpy()
+  
+  axs.contour(
+    plot_data.T[0].reshape((len(var1s),len(var2s))),
+    plot_data.T[1].reshape((len(var1s),len(var2s))),
+    plot_data.T[2].reshape((len(var1s),len(var2s))),
+    levels=10,
+    linestyles='dashed',
+    cmap='Oranges',
+    norm=colors.Normalize(vmin=0, vmax=1),
+    )
 
+  
+  im = axs.contourf(
+    plot_data.T[0].reshape((len(var1s),len(var2s))),
+    plot_data.T[1].reshape((len(var1s),len(var2s))),
+    plot_data.T[2].reshape((len(var1s),len(var2s))),
+    levels=10,
+    linestyles='dashed',
+    cmap='Oranges',
+    norm=colors.Normalize(vmin=0, vmax=1),
+    )
+
+  axs.grid(True, linestyle=':', linewidth=0.5, c='k')
+
+cbar_ax = fig.add_axes([0.125, 1.05, 0.8, 0.025])
+cbar = fig.colorbar(im, cax=cbar_ax, orientation="horizontal")
+cbar.set_ticklabels([str(l) + "\%" for l in levels])
 
 fig.tight_layout()
 display(fig)
