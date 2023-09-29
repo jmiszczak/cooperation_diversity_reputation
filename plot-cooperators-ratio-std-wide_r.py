@@ -9,7 +9,7 @@ import matplotlib.colors as colors
 
 mpl.rc('text', usetex=True)
 mpl.rc('font', family='serif')
-mpl.rc('font', size=9)
+mpl.rc('font', size=11)
 
 # %%
 # file with data from the experiment
@@ -56,7 +56,7 @@ for v0 in var0s:
           
           
 # %% plot data
-fig = mpl.figure.Figure(figsize=(4, 3))
+fig = mpl.figure.Figure(figsize=(5, 3.75))
 axs = fig.add_subplot()
 for i, nt in enumerate( list(sxs.values())):
 
@@ -79,7 +79,7 @@ print("[INFO] Saving " + "plot_" + exp_desc + "-mean.pdf")
 
 
 # %% plot data
-fig = mpl.figure.Figure(figsize=(4, 3))
+fig = mpl.figure.Figure(figsize=(5, 3.75))
 axs = fig.add_subplot()
 for i, nt in enumerate( list(sxs.values())):
 
@@ -102,7 +102,7 @@ print("[INFO] Saving " + "plot_" + exp_desc + "-std.pdf")
 
 
 # %% plot data
-fig = mpl.figure.Figure(figsize=(4, 3))
+fig = mpl.figure.Figure(figsize=(5, 3.75))
 axs = fig.add_subplot()
 for i, nt in enumerate( list(sxs.values())):
 
