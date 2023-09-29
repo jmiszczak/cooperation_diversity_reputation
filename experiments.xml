@@ -25,7 +25,7 @@
   </experiment>
 
 
-  <experiment name="base-experiment-small" repetitions="100" runMetricsEveryStep="false">
+  <experiment name="base-experiment" repetitions="100" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <timeLimit steps="1088"/>
