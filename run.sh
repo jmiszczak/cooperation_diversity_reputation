@@ -5,7 +5,7 @@ expName=${expName/./}
 expName=${expName/\//}
 
 # set the file contain the model 
-modelFile=cooperation_diversity_reputation.nlogo
+modelFile=cooperation_spatial_diversity.nlogo
 
 # set the file with experiment definitions
 expFile=experiments.xml
