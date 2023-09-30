@@ -15,7 +15,7 @@ mpl.rc('font', size=10)
 # file with data from the experiment
 # Note: header=6 is for NetLogo data
 
-exp_desc = 'base-experiment-small'
+exp_desc = 'base-experiment'
 #sxs = { 'vN' : "von Neumann", 'rvN' : 'random von Neumann', 'M': 'Moore', 'rM': 'random Moore'} #, 'rvNM': 'random von Neumann or random  Moore' }
 #sxs = { 'vN' : "von Neumann"}
 
@@ -43,45 +43,45 @@ for v0 in var0s:
 
 
 #%% plot 
-levels = np.arange(0,1.1,0.1)
+levels = np.arange(0,1.01,0.05)
+cmap = 'Oranges'
+plot_data = dict()
 
-
-fig = mpl.figure.Figure(figsize=(8, 3))
+fig = mpl.figure.Figure(figsize=(8, 8))
 for i, v0 in enumerate(var0s):
-  print(v0)
+  # print(v0)
 
-
-  axs = fig.add_subplot(121+i);
+  axs = fig.add_subplot(321+i);
+ 
+  plot_data[v0] = df[df[v[0]] == v0][[v[1], v[2], v[3]]].to_numpy()
   
-  
-  plot_data = df[df[v[0]] == v0][[v[1], v[2], v[3]]].to_numpy()
-  
-  axs.contour(
-    plot_data.T[0].reshape((len(var1s),len(var2s))),
-    plot_data.T[1].reshape((len(var1s),len(var2s))),
-    plot_data.T[2].reshape((len(var1s),len(var2s))),
-    levels=10,
-    linestyles='dashed',
-    cmap='Oranges',
-    norm=colors.Normalize(vmin=0, vmax=1),
-    )
+  # axs.contour(
+  #   plot_data[v0].T[0].reshape((len(var1s),len(var2s))),
+  #   plot_data[v0].T[1].reshape((len(var1s),len(var2s))),
+  #   plot_data[v0].T[2].reshape((len(var1s),len(var2s))),
+  #   levels=levels,
+  #   linestyles='solid',
+  #   cmap=cmap
+  #   )
 
   
   im = axs.contourf(
-    plot_data.T[0].reshape((len(var1s),len(var2s))),
-    plot_data.T[1].reshape((len(var1s),len(var2s))),
-    plot_data.T[2].reshape((len(var1s),len(var2s))),
-    levels=10,
-    linestyles='dashed',
-    cmap='Oranges',
-    norm=colors.Normalize(vmin=0, vmax=1),
+    plot_data[v0].T[0].reshape((len(var1s),len(var2s))),
+    plot_data[v0].T[1].reshape((len(var1s),len(var2s))),
+    plot_data[v0].T[2].reshape((len(var1s),len(var2s))),
+    levels=levels,
+    cmap=cmap,   
+    norm=colors.Normalize(vmin=0, vmax=1)
+
     )
+
+  im = axs.matshow (plot_data[3].T[2].reshape(len(var1s), len(var2s)), cmap='Reds', norm=colors.Normalize(vmin=0, vmax=1))
 
   axs.grid(True, linestyle=':', linewidth=0.5, c='k')
 
 cbar_ax = fig.add_axes([0.125, 1.05, 0.8, 0.025])
 cbar = fig.colorbar(im, cax=cbar_ax, orientation="horizontal")
-cbar.set_ticklabels([str(l) + "\%" for l in levels])
+cbar.set_ticklabels([str(l) for l in levels])
 
 fig.tight_layout()
 display(fig)
