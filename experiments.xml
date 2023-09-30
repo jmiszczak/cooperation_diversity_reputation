@@ -2,6 +2,9 @@
 <!DOCTYPE experiments SYSTEM "behaviorspace.dtd">
 <experiments>
 
+ <!-- experiments for the impact of roaming -->
+
+
   <experiment name="base-experiment-mini" repetitions="5" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
@@ -52,7 +55,7 @@
     <go>go</go>
     <timeLimit steps="1088"/>
     <metric>mean-cooperators1k</metric>
-    <steppedValueSet variable="raoming-agents" first="0" step="0.025" last="0.5"/>
+    <steppedValueSet variable="raoming-agents" first="0" step="0.05" last="0.75"/>
     <steppedValueSet variable="random-patches-number" first="3" step="1" last="8"/>
     <enumeratedValueSet variable="noise-factor">
       <value value="0.5"/>
@@ -68,6 +71,31 @@
       <value value="&quot;fermi-dirac&quot;"/>
     </enumeratedValueSet>
   </experiment>
+
+
+  <experiment name="base-experiment" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="1088"/>
+    <metric>mean-cooperators1k</metric>
+    <steppedValueSet variable="raoming-agents" first="0" step="0.05" last="0.75"/>
+    <steppedValueSet variable="random-patches-number" first="3" step="1" last="8"/>
+    <enumeratedValueSet variable="noise-factor">
+      <value value="0.5"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="synergy-factor" first="3" step="0.1" last="8"/>
+    <enumeratedValueSet variable="neighborhood-type">
+      <value value="&quot;random patches&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="world-size">
+      <value value="64"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="imitation-policy">
+      <value value="&quot;fermi-dirac&quot;"/>
+    </enumeratedValueSet>
+  </experiment>
+  
+  <!-- experiments for the dynamics -->
 
 
 
