@@ -73,17 +73,17 @@
   </experiment>
 
 
-  <experiment name="base-experiment" repetitions="100" runMetricsEveryStep="false">
+  <experiment name="random-patches-roaming" repetitions="50" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <timeLimit steps="1088"/>
+    <timeLimit steps="2048"/>
     <metric>mean-cooperators1k</metric>
-    <steppedValueSet variable="raoming-agents" first="0" step="0.05" last="0.75"/>
+    <steppedValueSet variable="raoming-agents" first="0" step="0.1" last="0.8"/>
     <steppedValueSet variable="random-patches-number" first="3" step="1" last="8"/>
     <enumeratedValueSet variable="noise-factor">
       <value value="0.5"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="synergy-factor" first="3" step="0.1" last="8"/>
+    <steppedValueSet variable="synergy-factor" first="2.5" step="0.1" last="6.5"/>
     <enumeratedValueSet variable="neighborhood-type">
       <value value="&quot;random patches&quot;"/>
     </enumeratedValueSet>
