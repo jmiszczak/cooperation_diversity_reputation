@@ -40,7 +40,7 @@
       <value value="&quot;random patches&quot;"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="world-size">
-      <value value="64"/>
+      <value value="32"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="imitation-policy">
       <value value="&quot;fermi-dirac&quot;"/>
