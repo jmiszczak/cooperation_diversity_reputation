@@ -9,13 +9,13 @@ import matplotlib.colors as colors
 
 mpl.rc('text', usetex=True)
 mpl.rc('font', family='serif')
-mpl.rc('font', size=10)
+mpl.rc('font', size=11)
 
 # %% data loading
 # file with data from the experiment
 # Note: header=6 is for NetLogo data
 
-exp_desc = 'base-experiment'
+exp_desc = 'base-experiment-small'
 #sxs = { 'vN' : "von Neumann", 'rvN' : 'random von Neumann', 'M': 'Moore', 'rM': 'random Moore'} #, 'rvNM': 'random von Neumann or random  Moore' }
 #sxs = { 'vN' : "von Neumann"}
 
@@ -43,11 +43,13 @@ for v0 in var0s:
 
 
 #%% plot 
-levels = np.arange(0,1.01,0.05)
-cmap = 'Oranges'
+# levels = np.linspace(0,1,11) #
+#levels =  list(map(lambda x : x/10, range(0,11)))
+levels = list(map( lambda x : x/10, list(range(0,11))))
+cmap = 'YlGn_r'
 plot_data = dict()
 
-fig = mpl.figure.Figure(figsize=(8, 8))
+fig = mpl.figure.Figure(figsize=(6, 7))
 for i, v0 in enumerate(var0s):
   # print(v0)
 
@@ -55,14 +57,15 @@ for i, v0 in enumerate(var0s):
  
   plot_data[v0] = df[df[v[0]] == v0][[v[1], v[2], v[3]]].to_numpy()
   
-  # axs.contour(
-  #   plot_data[v0].T[0].reshape((len(var1s),len(var2s))),
-  #   plot_data[v0].T[1].reshape((len(var1s),len(var2s))),
-  #   plot_data[v0].T[2].reshape((len(var1s),len(var2s))),
-  #   levels=levels,
-  #   linestyles='solid',
-  #   cmap=cmap
-  #   )
+  axs.contour(
+    plot_data[v0].T[0].reshape((len(var1s),len(var2s))),
+    plot_data[v0].T[1].reshape((len(var1s),len(var2s))),
+    plot_data[v0].T[2].reshape((len(var1s),len(var2s))),
+    levels=levels,
+    linestyles='dashed',
+    linewidths=.75,
+    colors = ['black']
+    )
 
   
   im = axs.contourf(
@@ -71,11 +74,12 @@ for i, v0 in enumerate(var0s):
     plot_data[v0].T[2].reshape((len(var1s),len(var2s))),
     levels=levels,
     cmap=cmap,   
-    norm=colors.Normalize(vmin=0, vmax=1)
+    norm=colors.Normalize(vmin=0, vmax=1),
+    # algorithm='serial'
 
     )
 
-  im = axs.matshow (plot_data[3].T[2].reshape(len(var1s), len(var2s)), cmap='Reds', norm=colors.Normalize(vmin=0, vmax=1))
+  # im = axs.matshow (plot_data[3].T[2].reshape(len(var1s), len(var2s)), cmap='Reds', norm=colors.Normalize(vmin=0, vmax=1))
 
   axs.grid(True, linestyle=':', linewidth=0.5, c='k')
 
@@ -86,5 +90,7 @@ cbar.set_ticklabels([str(l) for l in levels])
 fig.tight_layout()
 display(fig)
 
-# %%
-fig.savefig("plot_" + exp_desc + ".pdf", format="pdf", bbox_inches='tight')
+# %% saving
+fName = "plots/plot_" + exp_desc + ".pdf"
+print("[INFO] Saving " + fName)
+fig.savefig(fName, format="pdf", bbox_inches='tight')
