@@ -15,7 +15,7 @@ mpl.rc('font', size=11)
 # file with data from the experiment
 # Note: header=6 is for NetLogo data
 
-exp_desc = 'base-experiment-small'
+exp_desc = 'random-patches-roaming'
 #sxs = { 'vN' : "von Neumann", 'rvN' : 'random von Neumann', 'M': 'Moore', 'rM': 'random Moore'} #, 'rvNM': 'random von Neumann or random  Moore' }
 #sxs = { 'vN' : "von Neumann"}
 
@@ -46,7 +46,8 @@ for v0 in var0s:
 # levels = np.linspace(0,1,11) #
 #levels =  list(map(lambda x : x/10, range(0,11)))
 levels = list(map( lambda x : x/10, list(range(0,11))))
-cmap = 'YlGn_r'
+cmap = 'plasma'
+cmap = colors.LinearSegmentedColormap.from_list('', ['red', 'white'])
 plot_data = dict()
 
 fig = mpl.figure.Figure(figsize=(6, 7))
@@ -74,16 +75,37 @@ for i, v0 in enumerate(var0s):
     plot_data[v0].T[2].reshape((len(var1s),len(var2s))),
     levels=levels,
     cmap=cmap,   
-    norm=colors.Normalize(vmin=0, vmax=1),
+    norm=colors.Normalize(vmin=0, vmax=0.95),
     # algorithm='serial'
 
     )
+
+  axs.set_yticks([2.5,3,3.5,4,4.5,5,5.5,6,6.5])
+  if i in [0,2,4]:
+    axs.set_ylabel('synergy factor')
+  
+  if i in [4,5]:
+    axs.set_xlabel('roaming agents participation')
+  
+    
+  if i not in [0,2,4]:
+      axs.set_yticklabels([])
+  
+  if i not in [4,5]:
+      axs.set_xticklabels([])
+      
+  axs.set_title(r'$K$='+str(v0))
+  # axs.text(0.5/2,6.6,r'$K$='+str(v0), ha='center')
+
+  # axs.set_xlabel(vl[1])
+#  if i == 0:
+      # axs.set_ylabel(vl[2])
 
   # im = axs.matshow (plot_data[3].T[2].reshape(len(var1s), len(var2s)), cmap='Reds', norm=colors.Normalize(vmin=0, vmax=1))
 
   axs.grid(True, linestyle=':', linewidth=0.5, c='k')
 
-cbar_ax = fig.add_axes([0.125, 1.05, 0.8, 0.025])
+cbar_ax = fig.add_axes([0.125, 1.02, 0.8, 0.025])
 cbar = fig.colorbar(im, cax=cbar_ax, orientation="horizontal")
 cbar.set_ticklabels([str(l) for l in levels])
 
