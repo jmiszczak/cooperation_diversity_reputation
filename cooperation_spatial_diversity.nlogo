@@ -169,6 +169,8 @@ to choose-neighborhood
     ]
   ] neighborhood-type = "random patches" [
      set neighborhood n-of (1 + random random-patches-number ) patches
+  ] neighborhood-type = "K patches" [
+     set neighborhood n-of ( random-patches-number ) patches
   ])
 end
 
@@ -328,8 +330,8 @@ CHOOSER
 263
 neighborhood-type
 neighborhood-type
-"von Neumann" "Moore" "von Neumann or Moore" "random von Neumann" "random Moore" "random von Neumann or Moore" "random patches"
-6
+"von Neumann" "Moore" "von Neumann or Moore" "random von Neumann" "random Moore" "random von Neumann or Moore" "random patches" "K patches"
+7
 
 BUTTON
 117
@@ -438,7 +440,7 @@ random-patches-number
 random-patches-number
 2
 16
-5.0
+2.0
 1
 1
 NIL
