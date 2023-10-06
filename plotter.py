@@ -15,16 +15,14 @@ mpl.rc('font', size=11)
 # file with data from the experiment
 # Note: header=6 is for NetLogo data
 
+# experiment name
 exp_desc = 'random-patches-roaming'
-#sxs = { 'vN' : "von Neumann", 'rvN' : 'random von Neumann', 'M': 'Moore', 'rM': 'random Moore'} #, 'rvNM': 'random von Neumann or random  Moore' }
-#sxs = { 'vN' : "von Neumann"}
-
-
-#%% read data
-#data = dict() 
+# variables usd in the plots
 v = ["random-patches-number","raoming-agents","synergy-factor", "mean-cooperators1k"]
 
 data = pd.read_csv(exp_desc + '.csv', header=6)
+
+# data fram used for plots
 df = pd.DataFrame(columns=v)
 var0s = data[v[0]].unique()
 var1s = data[v[1]].unique()
@@ -43,17 +41,19 @@ for v0 in var0s:
 
 
 #%% plot 
-# levels = np.linspace(0,1,11) #
-#levels =  list(map(lambda x : x/10, range(0,11)))
+# leves for contour plot
 levels = list(map( lambda x : x/10, list(range(0,11))))
-cmap = 'plasma'
+
+# color map for contour plot
 cmap = colors.LinearSegmentedColormap.from_list('', ['red', 'white'])
+
+# contained for plotted data
 plot_data = dict()
 
+# one figure for all cases of v0
 fig = mpl.figure.Figure(figsize=(6, 7))
 for i, v0 in enumerate(var0s):
-  # print(v0)
-
+  # Note: 3*2 is the number of cases for var0s 
   axs = fig.add_subplot(321+i);
  
   plot_data[v0] = df[df[v[0]] == v0][[v[1], v[2], v[3]]].to_numpy()
@@ -76,16 +76,15 @@ for i, v0 in enumerate(var0s):
     levels=levels,
     cmap=cmap,   
     norm=colors.Normalize(vmin=0, vmax=0.95),
-    # algorithm='serial'
-
     )
 
   axs.set_yticks([2.5,3,3.5,4,4.5,5,5.5,6,6.5])
+  axs.set_xticks([0,.15,.3,.45,.6,.75])
   if i in [0,2,4]:
-    axs.set_ylabel('synergy factor')
+    axs.set_ylabel(r'synergy factor $r$')
   
   if i in [4,5]:
-    axs.set_xlabel('roaming agents participation')
+    axs.set_xlabel(r'roaming agents participation $\delta$')
   
     
   if i not in [0,2,4]:
