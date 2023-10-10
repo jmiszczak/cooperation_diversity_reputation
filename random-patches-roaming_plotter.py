@@ -9,7 +9,7 @@ import matplotlib.colors as colors
 
 mpl.rc('text', usetex=True)
 mpl.rc('font', family='serif')
-mpl.rc('font', size=11)
+mpl.rc('font', size=9)
 
 # %% data loading
 # file with data from the experiment
@@ -18,11 +18,11 @@ mpl.rc('font', size=11)
 # experiment name
 exp_desc = 'random-patches-roaming'
 # variables usd in the plots
-v = ["random-patches-number","raoming-agents","synergy-factor", "mean-cooperators1k"]
+v = ["random-patches-number","rooming-agents","synergy-factor", "mean-cooperators1k"]
 
 data = pd.read_csv(exp_desc + '.csv', header=6)
 
-# data fram used for plots
+# data from used for plots
 df = pd.DataFrame(columns=v)
 var0s = data[v[0]].unique()
 var1s = data[v[1]].unique()
@@ -36,25 +36,25 @@ for v0 in var0s:
                 v0,
                 v1,
                 v2,
-                data[(data[v[0]] == v0) & (data[v[1]] == v1) & (data[v[2]] == v2)]['mean-cooperators1k'].mean()
+                data[(data[v[0]] == v0) & (data[v[1]] == v1) & (data[v[2]] == v2)]['mean-cooperators1k'].median()
             ]
 
 
 #%% plot 
-# leves for contour plot
+# levels for contour plot
 levels = list(map( lambda x : x/10, list(range(0,11))))
 
 # color map for contour plot
-cmap = colors.LinearSegmentedColormap.from_list('', ['red', 'white'])
+cmap = colors.LinearSegmentedColormap.from_list('', ['darkred', 'red', 'orange', 'yellow', 'white'])
 
 # contained for plotted data
 plot_data = dict()
 
 # one figure for all cases of v0
-fig = mpl.figure.Figure(figsize=(6, 7))
+fig = mpl.figure.Figure(figsize=(6, 3.5))
 for i, v0 in enumerate(var0s):
   # Note: 3*2 is the number of cases for var0s 
-  axs = fig.add_subplot(321+i);
+  axs = fig.add_subplot(231+i)
  
   plot_data[v0] = df[df[v[0]] == v0][[v[1], v[2], v[3]]].to_numpy()
   
@@ -62,13 +62,12 @@ for i, v0 in enumerate(var0s):
     plot_data[v0].T[0].reshape((len(var1s),len(var2s))),
     plot_data[v0].T[1].reshape((len(var1s),len(var2s))),
     plot_data[v0].T[2].reshape((len(var1s),len(var2s))),
-    levels=levels,
+    levels=10,
     linestyles='dashed',
     linewidths=.75,
     colors = ['black']
     )
 
-  
   im = axs.contourf(
     plot_data[v0].T[0].reshape((len(var1s),len(var2s))),
     plot_data[v0].T[1].reshape((len(var1s),len(var2s))),
@@ -78,19 +77,19 @@ for i, v0 in enumerate(var0s):
     norm=colors.Normalize(vmin=0, vmax=0.95),
     )
 
-  axs.set_yticks([2.5,3,3.5,4,4.5,5,5.5,6,6.5])
-  axs.set_xticks([0,.15,.3,.45,.6,.75])
-  if i in [0,2,4]:
+  axs.set_yticks([2.5,3.5,4.5,5.5,6.5])
+  axs.set_xticks([0,.2,.4,.6,.8])
+  if i in [0,3]:
     axs.set_ylabel(r'synergy factor $r$')
   
-  if i in [4,5]:
+  if i in [3,4,5]:
     axs.set_xlabel(r'roaming agents participation $\delta$')
   
     
-  if i not in [0,2,4]:
+  if i not in [0,3]:
       axs.set_yticklabels([])
   
-  if i not in [4,5]:
+  if i not in [3,4,5]:
       axs.set_xticklabels([])
       
   axs.set_title(r'$K$='+str(v0))
@@ -104,7 +103,7 @@ for i, v0 in enumerate(var0s):
 
   axs.grid(True, linestyle=':', linewidth=0.5, c='k')
 
-cbar_ax = fig.add_axes([0.125, 1.02, 0.8, 0.025])
+cbar_ax = fig.add_axes([0.125, 1.02, 0.8, 0.02])
 cbar = fig.colorbar(im, cax=cbar_ax, orientation="horizontal")
 cbar.set_ticklabels([str(l) for l in levels])
 
@@ -115,3 +114,16 @@ display(fig)
 fName = "plots/plot_" + exp_desc + ".pdf"
 print("[INFO] Saving " + fName)
 fig.savefig(fName, format="pdf", bbox_inches='tight')
+
+#%% min delta
+data = dict()
+data_max = dict()
+
+
+for k in var0s:
+    data[k] = df[df[v[0]] == k][[v[1], v[2], v[3]]]
+                                
+for k in var0s:
+    data_max[k] = data[k][1 - data[k]['mean-cooperators1k'] < 10**-4]
+    
+print([min(data_max[x]['raoming-agents']) for x in var0s])
