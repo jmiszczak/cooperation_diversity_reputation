@@ -131,7 +131,7 @@ to setup-patches
       set contribution 0 ;; no contribution, free-rider
     ]
 
-    ifelse random-float 1.0 < raoming-agents [
+    ifelse random-float 1.0 < roaming-agents [
       set roaming? true ;; agent changing the neighbours
       set plabel "*"
     ] [
@@ -331,7 +331,7 @@ CHOOSER
 neighborhood-type
 neighborhood-type
 "von Neumann" "Moore" "von Neumann or Moore" "random von Neumann" "random Moore" "random von Neumann or Moore" "random patches" "K patches"
-7
+3
 
 BUTTON
 117
@@ -451,11 +451,11 @@ SLIDER
 361
 201
 394
-raoming-agents
-raoming-agents
+roaming-agents
+roaming-agents
 0
 1
-0.0
+0.5
 0.05
 1
 NIL
