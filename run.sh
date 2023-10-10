@@ -25,5 +25,5 @@ netlogo-headless.sh --threads 16 \
   --experiment $expName
 
 # print some information after finishing
-echo -n "[INFO] End time:"
+echo -n "[INFO] End time: "
 date +"%d/%m - %H:%M"
