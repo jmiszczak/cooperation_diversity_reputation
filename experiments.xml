@@ -5,62 +5,39 @@
  <!-- experiments for the impact of roaming -->
 
 
-  <experiment name="base-experiment-mini" repetitions="5" runMetricsEveryStep="false">
-    <setup>setup</setup>
-    <go>go</go>
-    <timeLimit steps="1088"/>
-    <metric>mean-cooperators1k</metric>
-    <steppedValueSet variable="raoming-agents" first="0" step="0.05" last="0.25"/>
-    <steppedValueSet variable="random-patches-number" first="5" step="1" last="6"/>
-    <enumeratedValueSet variable="noise-factor">
-      <value value="0.5"/>
-    </enumeratedValueSet>
-    <steppedValueSet variable="synergy-factor" first="3" step="0.5" last="7"/>
-    <enumeratedValueSet variable="neighborhood-type">
-      <value value="&quot;random patches&quot;"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="world-size">
-      <value value="32"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="imitation-policy">
-      <value value="&quot;fermi-dirac&quot;"/>
-    </enumeratedValueSet>
-  </experiment>
-
-
-  <experiment name="base-experiment-small" repetitions="10" runMetricsEveryStep="false">
+  <experiment name="random-local-roaming" repetitions="50" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <timeLimit steps="2048"/>
     <metric>mean-cooperators1k</metric>
-    <steppedValueSet variable="raoming-agents" first="0" step="0.05" last="0.5"/>
-    <steppedValueSet variable="random-patches-number" first="3" step="1" last="8"/>
+    <steppedValueSet variable="roaming-agents" first="0" step="0.1" last="1.0"/>
     <enumeratedValueSet variable="noise-factor">
       <value value="0.5"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="synergy-factor" first="3" step="0.25" last="8"/>
+    <steppedValueSet variable="synergy-factor" first="2.5" step="0.1" last="6.5"/>
     <enumeratedValueSet variable="neighborhood-type">
-      <value value="&quot;random patches&quot;"/>
+      <value value="&quot;random von Neumann&quot;"/>
+      <value value="&quot;random Moore&quot;"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="world-size">
-      <value value="32"/>
+      <value value="64"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="imitation-policy">
       <value value="&quot;fermi-dirac&quot;"/>
     </enumeratedValueSet>
   </experiment>
 
-  <experiment name="base-experiment" repetitions="100" runMetricsEveryStep="false">
+  <experiment name="random-patches-roaming" repetitions="50" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <timeLimit steps="1088"/>
+    <timeLimit steps="2048"/>
     <metric>mean-cooperators1k</metric>
-    <steppedValueSet variable="raoming-agents" first="0" step="0.05" last="0.75"/>
+    <steppedValueSet variable="roaming-agents" first="0" step="0.1" last="0.8"/>
     <steppedValueSet variable="random-patches-number" first="3" step="1" last="8"/>
     <enumeratedValueSet variable="noise-factor">
       <value value="0.5"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="synergy-factor" first="3" step="0.1" last="8"/>
+    <steppedValueSet variable="synergy-factor" first="2.5" step="0.1" last="6.5"/>
     <enumeratedValueSet variable="neighborhood-type">
       <value value="&quot;random patches&quot;"/>
     </enumeratedValueSet>
@@ -71,14 +48,14 @@
       <value value="&quot;fermi-dirac&quot;"/>
     </enumeratedValueSet>
   </experiment>
-
-
-  <experiment name="random-patches-roaming" repetitions="50" runMetricsEveryStep="false">
+  
+  <!-- check this - it should be around one week -->
+  <experiment name="min-roaming-random-patches" repetitions="10" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <timeLimit steps="2048"/>
     <metric>mean-cooperators1k</metric>
-    <steppedValueSet variable="raoming-agents" first="0" step="0.1" last="0.8"/>
+    <steppedValueSet variable="roaming-agents" first="0" step="0.01" last="0.4"/>
     <steppedValueSet variable="random-patches-number" first="3" step="1" last="8"/>
     <enumeratedValueSet variable="noise-factor">
       <value value="0.5"/>
@@ -96,8 +73,6 @@
   </experiment>
   
   <!-- experiments for the dynamics -->
-
-
 
   <experiment name="cooperators-stationary-synergy-100" repetitions="20" runMetricsEveryStep="false">
     <setup>setup</setup>
