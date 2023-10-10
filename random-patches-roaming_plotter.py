@@ -3,9 +3,12 @@
 # %% initial imports
 import pandas as pd
 import numpy as np
+import os
 import matplotlib as mpl
+import matplotlib.figure as figure
 from os.path import exists
 import matplotlib.colors as colors
+from IPython.display import display
 
 mpl.rc('text', usetex=True)
 mpl.rc('font', family='serif')
@@ -18,7 +21,7 @@ mpl.rc('font', size=9)
 # experiment name
 exp_desc = 'random-patches-roaming'
 # variables usd in the plots
-v = ["random-patches-number","rooming-agents","synergy-factor", "mean-cooperators1k"]
+v = ["random-patches-number","roaming-agents","synergy-factor", "mean-cooperators1k"]
 
 data = pd.read_csv(exp_desc + '.csv', header=6)
 
@@ -51,7 +54,7 @@ cmap = colors.LinearSegmentedColormap.from_list('', ['darkred', 'red', 'orange',
 plot_data = dict()
 
 # one figure for all cases of v0
-fig = mpl.figure.Figure(figsize=(6, 3.5))
+fig = figure.Figure(figsize=(6, 3.5))
 for i, v0 in enumerate(var0s):
   # Note: 3*2 is the number of cases for var0s 
   axs = fig.add_subplot(231+i)
@@ -126,4 +129,4 @@ for k in var0s:
 for k in var0s:
     data_max[k] = data[k][1 - data[k]['mean-cooperators1k'] < 10**-4]
     
-print([min(data_max[x]['raoming-agents']) for x in var0s])
+print([min(data_max[x]['roaming-agents']) for x in var0s])
