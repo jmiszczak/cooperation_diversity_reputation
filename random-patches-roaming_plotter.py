@@ -21,7 +21,7 @@ mpl.rc('font', size=9)
 # experiment name
 exp_desc = 'random-patches-roaming'
 # variables usd in the plots
-v = ["random-patches-number","roaming-agents","synergy-factor", "mean-cooperators1k"]
+v = ["random-patches-number", "roaming-agents", "synergy-factor", "mean-cooperators1k"]
 
 data = pd.read_csv(exp_desc + '.csv', header=6)
 

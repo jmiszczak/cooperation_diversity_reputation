@@ -57,7 +57,7 @@ plot_data = dict()
 fig = figure.Figure(figsize=(6, 3.5))
 for i, v0 in enumerate(var0s):
   # Note: 3*2 is the number of cases for var0s 
-  axs = fig.add_subplot(241+i)
+  axs = fig.add_subplot(231+i)
  
   plot_data[v0] = df[df[v[0]] == v0][[v[1], v[2], v[3]]].to_numpy()
   

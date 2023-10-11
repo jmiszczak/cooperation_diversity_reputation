@@ -48,7 +48,7 @@ for v0 in var0s:
 levels = list(map( lambda x : x/10, list(range(0,11))))
 
 # color map for contour plot
-cmap = colors.LinearSegmentedColormap.from_list('', ['red', 'white'])
+cmap = colors.LinearSegmentedColormap.from_list('', ['darkred', 'red', 'orange', 'yellow', 'white'])
 
 # contained for plotted data
 plot_data = dict()
@@ -82,7 +82,7 @@ for i, v0 in enumerate(var0s):
     )
 
   axs.set_yticks([2.5,3,3.5,4,4.5,5,5.5,6,6.5])
-  axs.set_xticks([0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1])
+  axs.set_xticks([0,.2,.4,.6,.8,1])
   if i in [0,2,4]:
     axs.set_ylabel(r'synergy factor $r$')
   
