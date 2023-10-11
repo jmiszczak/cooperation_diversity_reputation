@@ -27,7 +27,7 @@
     </enumeratedValueSet>
   </experiment>
 
-  <!-- randomized neigbourhoods with fixed max neigbours from the full population, with roaming -->
+  <!-- randomized neighborhoods with fixed max neighbors from the full population, with roaming -->
 
   <experiment name="random-patches-roaming" repetitions="50" runMetricsEveryStep="false">
     <setup>setup</setup>
@@ -51,10 +51,10 @@
     </enumeratedValueSet>
   </experiment>
   
-  <!-- randomized neigbourhoods with fixed max neigbours, with roaming -->
-  <!-- small version for testing minimum of raoming participation -->
+  <!-- randomized neighborhoods with fixed max neighbors, with roaming -->
+  <!-- small version for testing minimum of roaming participation -->
   
-  <experiment name="min-roaming-random-patches-small" repetitions="10" runMetricsEveryStep="false">
+  <experiment name="min-roaming-random-patches-small" repetitions="50" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <timeLimit steps="2048"/>
