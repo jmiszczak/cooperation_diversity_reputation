@@ -12,14 +12,14 @@ from IPython.display import display
 
 mpl.rc('text', usetex=True)
 mpl.rc('font', family='serif')
-mpl.rc('font', size=9)
+mpl.rc('font', size=8)
 
 # %% data loading
 # file with data from the experiment
 # Note: header=6 is for NetLogo data
 
 # experiment name
-exp_desc = 'min-roaming-random-patches-small'
+exp_desc = 'min-roaming-random-patches-medium'
 # variables usd in the plots
 v = ["random-patches-number", "roaming-agents", "synergy-factor", "mean-cooperators1k"]
 
@@ -57,7 +57,7 @@ plot_data = dict()
 fig = figure.Figure(figsize=(6, 3.5))
 for i, v0 in enumerate(var0s):
   # Note: 3*2 is the number of cases for var0s 
-  axs = fig.add_subplot(231+i)
+  axs = fig.add_subplot(241+i)
  
   plot_data[v0] = df[df[v[0]] == v0][[v[1], v[2], v[3]]].to_numpy()
   
@@ -80,20 +80,21 @@ for i, v0 in enumerate(var0s):
     norm=colors.Normalize(vmin=0, vmax=0.95),
     )
 
-  axs.set_yticks([2.5,3.5,4.5,5.5,6.5])
+  axs.set_yticks([3,4,5,6,7])
   axs.set_xticks([0,.1,.2,.3,.4])
-  if i in [0,3]:
-    axs.set_ylabel(r'synergy factor $r$')
+  if i in [0,4]:
+    axs.set_ylabel(r'$r$')
   
-  if i in [3,4,5]:
-    axs.set_xlabel(r'roaming agents participation $\delta$')
+  if i in [4,5,6,7]:
+    axs.set_xlabel(r'$\delta$')
   
     
-  if i not in [0,3]:
+  if i not in [0,4]:
       axs.set_yticklabels([])
   
-  if i not in [3,4,5]:
+  if i not in [4,5,6,7]:
       axs.set_xticklabels([])
+      
       
   axs.set_title(r'$K$='+str(v0))
   # axs.text(0.5/2,6.6,r'$K$='+str(v0), ha='center')
@@ -106,7 +107,7 @@ for i, v0 in enumerate(var0s):
 
   axs.grid(True, linestyle=':', linewidth=0.5, c='k')
 
-cbar_ax = fig.add_axes([0.125, 1.02, 0.8, 0.02])
+cbar_ax = fig.add_axes([0.12, 1.025, 0.8, 0.02])
 cbar = fig.colorbar(im, cax=cbar_ax, orientation="horizontal")
 cbar.set_ticklabels([str(l) for l in levels])
 
@@ -120,13 +121,57 @@ fig.savefig(fName, format="pdf", bbox_inches='tight')
 
 #%% min delta
 data = dict()
-data_max = dict()
-
+data_max1 = dict()
+data_max2 = dict()
+thr1 = 0.95
+thr2 = 0.995
 
 for k in var0s:
     data[k] = df[df[v[0]] == k][[v[1], v[2], v[3]]]
                                 
 for k in var0s:
-    data_max[k] = data[k][1 - data[k]['mean-cooperators1k'] < 10**-4]
+    data_max1[k] = data[k][data[k]['mean-cooperators1k'] >= thr1 ]
+    data_max2[k] = data[k][data[k]['mean-cooperators1k'] >= thr2 ]
     
-print([min(data_max[x]['roaming-agents']) for x in var0s])
+min_delta1 = [min(data_max1[x]['roaming-agents']) for x in var0s]
+min_delta2 = [min(data_max2[x]['roaming-agents']) for x in var0s]
+
+fig = figure.Figure(figsize=(3.5, 2.7))
+axs = fig.add_subplot()
+axs.set_ylim(-0.01,0.25)
+
+# thr1
+axs.plot(var0s, min_delta1, 'x', color='steelblue', label='over {}\%'.format(100*thr1))
+a, b = np.polyfit(var0s, min_delta1,1)
+print(a,b)
+axs.plot(var0s, a*var0s+b, '--', color='steelblue', lw=0.75)
+# axs.annotate(r'$f_1(K) = {:4.3f}K + {:4.3f}$ '.format(a,b), xy=(6,0.1), xycoords='data')
+
+loc = np.array((5,0.02))
+axs.text(*loc, r'$f_1(K) = {:4.3f}K + {:4.3f}$ '.format(a,b),
+         rotation=np.rad2deg(np.arctan(a)), rotation_mode='anchor',
+              transform_rotates_text=True)
+
+# thr2
+axs.plot(var0s, min_delta2, 'ro', fillstyle='none', label='over {}\%'.format(100*thr2))
+a, b = np.polyfit(var0s, min_delta2,1)
+print(a,b)
+axs.plot(var0s, a*var0s+b,'r--', lw=0.75)
+# axs.annotate(r'$f_2(K) = {:4.3f}K + {:4.3f}$ '.format(a,b), xy=(6,0.05), xycoords='data')
+
+loc = np.array((5,0.14))
+axs.text(*loc, r'$f_2(K) = {:4.3f}K + {:4.3f}$ '.format(a,b),
+         rotation=np.rad2deg(np.arctan(a)), rotation_mode='anchor',
+              transform_rotates_text=True)
+
+axs.grid(True, linestyle=':', linewidth=0.5, c='k')
+axs.set_xlabel(r'$K$')
+axs.set_ylabel(r'optimal $\delta$')
+
+axs.legend(ncols=2, loc='upper left', shadow=None)
+fig.tight_layout()
+display(fig)
+
+fName = "plots/plot_" + exp_desc + "-min_delta.pdf"
+print("[INFO] Saving " + fName)
+fig.savefig(fName, format="pdf", bbox_inches='tight')
