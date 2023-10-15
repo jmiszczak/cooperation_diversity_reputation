@@ -77,7 +77,7 @@
   <!-- randomized neighborhoods with fixed max neighbors, with roaming -->
   <!-- small version for testing minimum of roaming participation -->
   
-  <experiment name="min-roaming-random-patches-small" repetitions="50" runMetricsEveryStep="false">
+  <experiment name="min-roaming-random-patches-small" repetitions="150" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <timeLimit steps="2048"/>
@@ -120,7 +120,28 @@
       <value value="&quot;fermi-dirac&quot;"/>
     </enumeratedValueSet>
   </experiment>
-  
+
+  <experiment name="min-roaming-random-patches-64" repetitions="50" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="2048"/>
+    <metric>mean-cooperators1k</metric>
+    <steppedValueSet variable="roaming-agents" first="0" step="0.01" last="0.4"/>
+    <steppedValueSet variable="random-patches-number" first="4" step="2" last="14"/>
+    <enumeratedValueSet variable="noise-factor">
+      <value value="0.5"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="synergy-factor" first="3" step="0.1" last="8"/>
+    <enumeratedValueSet variable="neighborhood-type">
+      <value value="&quot;random patches&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="world-size">
+      <value value="64"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="imitation-policy">
+      <value value="&quot;fermi-dirac&quot;"/>
+    </enumeratedValueSet>
+  </experiment> 
   <!-- experiments for the dynamics, without roaming -->
 
   <experiment name="cooperators-stationary-synergy-100" repetitions="20" runMetricsEveryStep="false">
