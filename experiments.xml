@@ -121,7 +121,7 @@
     </enumeratedValueSet>
   </experiment>
 
-  <experiment name="min-roaming-random-patches-64" repetitions="50" runMetricsEveryStep="false">
+  <experiment name="min-roaming-random-patches-l64-even" repetitions="50" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <timeLimit steps="2048"/>
