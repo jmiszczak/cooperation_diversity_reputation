@@ -19,7 +19,10 @@ mpl.rc('font', size=8)
 # Note: header=6 is for NetLogo data
 
 # experiment name
-exp_desc = 'min-roaming-random-patches-medium'
+exp_desc = 'min-roaming-random-patches-small-150'
+# exp_desc = 'min-roaming-random-patches-l64-even'
+# exp_desc = 'min-roaming-random-patches-medium'
+
 # variables usd in the plots
 v = ["random-patches-number", "roaming-agents", "synergy-factor", "mean-cooperators1k"]
 
@@ -31,7 +34,7 @@ var0s = data[v[0]].unique()
 var1s = data[v[1]].unique()
 var2s = data[v[2]].unique()
 
-
+# %% preprocess
 for v0 in var0s:
     for v1 in var1s:
         for v2 in var2s: 
@@ -45,10 +48,21 @@ for v0 in var0s:
 
 #%% plot 
 # levels for contour plot
-levels = list(map( lambda x : x/10, list(range(0,11))))
+# levels = list(map( lambda x : x/10, list(range(0,11))))
 
 # color map for contour plot
-cmap = colors.LinearSegmentedColormap.from_list('', ['darkred', 'red', 'orange', 'yellow', 'white'])
+# cmap = colors.LinearSegmentedColormap.from_list('', ['darkred', 'red', 'orange', 'yellow', 'white'])
+
+
+# levels = list(map( lambda x : x/20, list(range(0,23))))
+levels = [0,0.1,0.5,0.75,0.9,0.95,0.98, 1]
+
+
+plotColors = ['orange',  'red', 'tomato',
+               'gold',
+              'yellow', 'palegreen', 'white']
+cmap, norm = colors.from_levels_and_colors(levels, plotColors)
+
 
 # contained for plotted data
 plot_data = dict()
@@ -65,7 +79,7 @@ for i, v0 in enumerate(var0s):
     plot_data[v0].T[0].reshape((len(var1s),len(var2s))),
     plot_data[v0].T[1].reshape((len(var1s),len(var2s))),
     plot_data[v0].T[2].reshape((len(var1s),len(var2s))),
-    levels=10,
+    levels=levels,
     linestyles='dashed',
     linewidths=.75,
     colors = ['black']
@@ -76,8 +90,8 @@ for i, v0 in enumerate(var0s):
     plot_data[v0].T[1].reshape((len(var1s),len(var2s))),
     plot_data[v0].T[2].reshape((len(var1s),len(var2s))),
     levels=levels,
-    cmap=cmap,   
-    norm=colors.Normalize(vmin=0, vmax=0.95),
+    cmap = cmap,
+    norm = norm
     )
 
   axs.set_yticks([3,4,5,6,7])
@@ -120,47 +134,53 @@ print("[INFO] Saving " + fName)
 fig.savefig(fName, format="pdf", bbox_inches='tight')
 
 #%% min delta
-data = dict()
+data_md = dict()
 data_max1 = dict()
 data_max2 = dict()
 thr1 = 0.95
-thr2 = 0.995
+thr2 = 0.98
+pm = lambda x : '-' if x < a else '+'
 
 for k in var0s:
-    data[k] = df[df[v[0]] == k][[v[1], v[2], v[3]]]
+    data_md[k] = df[df[v[0]] == k][[v[1], v[2], v[3]]]
                                 
 for k in var0s:
-    data_max1[k] = data[k][data[k]['mean-cooperators1k'] >= thr1 ]
-    data_max2[k] = data[k][data[k]['mean-cooperators1k'] >= thr2 ]
+    data_max1[k] = data_md[k][data_md[k]['mean-cooperators1k'] >= thr1 ]
+    data_max2[k] = data_md[k][data_md[k]['mean-cooperators1k'] >= thr2 ]
     
-min_delta1 = [min(data_max1[x]['roaming-agents']) for x in var0s]
-min_delta2 = [min(data_max2[x]['roaming-agents']) for x in var0s]
+#min_delta1 = [min(data_max1[x]['roaming-agents']) for x in var0s]
+#min_delta2 = [min(data_max2[x]['roaming-agents']) for x in var0s]
+
+min_delta1 = [min(data_max1[x][data_max1[x]['synergy-factor'] == min(data_max1[x]['synergy-factor'])]['roaming-agents'])  for x in var0s]
+min_delta2 = [min(data_max2[x][data_max1[x]['synergy-factor'] == min(data_max2[x]['synergy-factor'])]['roaming-agents'])  for x in var0s]
+
 
 fig = figure.Figure(figsize=(3.5, 2.7))
 axs = fig.add_subplot()
-axs.set_ylim(-0.01,0.25)
+axs.set_ylim(-0.01,0.5)
 
 # thr1
 axs.plot(var0s, min_delta1, 'x', color='steelblue', label='over {}\%'.format(100*thr1))
-a, b = np.polyfit(var0s, min_delta1,1)
+a, b = np.polyfit(var0s, min_delta1, 1)
 print(a,b)
 axs.plot(var0s, a*var0s+b, '--', color='steelblue', lw=0.75)
 # axs.annotate(r'$f_1(K) = {:4.3f}K + {:4.3f}$ '.format(a,b), xy=(6,0.1), xycoords='data')
 
-loc = np.array((5,0.02))
-axs.text(*loc, r'$f_1(K) = {:4.3f}K + {:4.3f}$ '.format(a,b),
+loc = np.array((5,a*5))
+axs.text(*loc, r'$f_{}(K) = {:4.3f}K {} {:4.3f}$ '.format('{'+str(thr1)+'}',a,pm(b),abs(b)),
          rotation=np.rad2deg(np.arctan(a)), rotation_mode='anchor',
               transform_rotates_text=True)
 
 # thr2
 axs.plot(var0s, min_delta2, 'ro', fillstyle='none', label='over {}\%'.format(100*thr2))
-a, b = np.polyfit(var0s, min_delta2,1)
+a, b = np.polyfit(var0s, min_delta2, 1)
 print(a,b)
 axs.plot(var0s, a*var0s+b,'r--', lw=0.75)
 # axs.annotate(r'$f_2(K) = {:4.3f}K + {:4.3f}$ '.format(a,b), xy=(6,0.05), xycoords='data')
 
-loc = np.array((5,0.14))
-axs.text(*loc, r'$f_2(K) = {:4.3f}K + {:4.3f}$ '.format(a,b),
+
+loc = np.array((5,a*5+b+0.07))
+axs.text(*loc, r'$f_{}(K) = {:4.3f}K {} {:4.3f}$ '.format('{'+str(thr2)+'}',a,pm(b),abs(b)),
          rotation=np.rad2deg(np.arctan(a)), rotation_mode='anchor',
               transform_rotates_text=True)
 
