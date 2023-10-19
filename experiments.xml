@@ -5,16 +5,16 @@
   <!-- experiments for the impact of roaming -->
   
   <!-- randomized von Neumann and Moore neigbourhoods, with roaming -->
-  <experiment name="random-local-roaming" repetitions="50" runMetricsEveryStep="false">
+  <experiment name="random-local-roaming" repetitions="100" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <timeLimit steps="2048"/>
     <metric>mean-cooperators1k</metric>
-    <steppedValueSet variable="roaming-agents" first="0" step="0.1" last="1.0"/>
+    <steppedValueSet variable="roaming-agents" first="0" step="0.05" last="1.0"/>
     <enumeratedValueSet variable="noise-factor">
       <value value="0.5"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="synergy-factor" first="2.5" step="0.1" last="6.5"/>
+    <steppedValueSet variable="synergy-factor" first="2.5" step="0.1" last="6"/>
     <enumeratedValueSet variable="neighborhood-type">
       <value value="&quot;random von Neumann&quot;"/>
       <value value="&quot;random Moore&quot;"/>
