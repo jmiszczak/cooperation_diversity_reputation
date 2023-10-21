@@ -30,7 +30,7 @@ data = pd.read_csv(exp_desc + '.csv', header=6)
 
 # data from used for plots
 df = pd.DataFrame(columns=v)
-var0s = data[v[0]].unique()
+var0s = data[v[0]].unique()[::2]
 var1s = data[v[1]].unique()
 var2s = data[v[2]].unique()
 
