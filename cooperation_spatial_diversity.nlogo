@@ -59,7 +59,7 @@ to go
     play-pgg
   ]
 
-  ;; imitate the strategy using the selecedt policy
+  ;; imitate the strategy using the seleced policy
   (ifelse imitation-policy = "linear" [
     ask patches [
       imitate-strategy-linear
