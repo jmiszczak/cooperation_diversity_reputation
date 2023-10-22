@@ -3,11 +3,12 @@
 # %% initial imports
 import pandas as pd
 import numpy as np
-import os
+
 import matplotlib as mpl
 import matplotlib.figure as figure
-from os.path import exists
 import matplotlib.colors as colors
+from matplotlib.ticker import AutoMinorLocator
+
 from IPython.display import display
 
 mpl.rc('text', usetex=True)
@@ -19,8 +20,8 @@ mpl.rc('font', size=8)
 # Note: header=6 is for NetLogo data
 
 # experiment name
-exp_desc = 'min-roaming-random-patches-small-150'
-# exp_desc = 'min-roaming-random-patches-l64-even'
+# exp_desc = 'min-roaming-random-patches-small-150'
+exp_desc = 'min-roaming-random-patches-l64-even'
 # exp_desc = 'min-roaming-random-patches-medium'
 
 # variables usd in the plots
@@ -30,7 +31,7 @@ data = pd.read_csv(exp_desc + '.csv', header=6)
 
 # data from used for plots
 df = pd.DataFrame(columns=v)
-var0s = data[v[0]].unique()[::2]
+var0s = data[v[0]].unique()
 var1s = data[v[1]].unique()
 var2s = data[v[2]].unique()
 
@@ -68,10 +69,10 @@ cmap, norm = colors.from_levels_and_colors(levels, plotColors)
 plot_data = dict()
 
 # one figure for all cases of v0
-fig = figure.Figure(figsize=(6, 3.5))
+fig = figure.Figure(figsize=(6.5, 5.5))
 for i, v0 in enumerate(var0s):
   # Note: 3*2 is the number of cases for var0s 
-  axs = fig.add_subplot(241+i)
+  axs = fig.add_subplot(331+i)
  
   plot_data[v0] = df[df[v[0]] == v0][[v[1], v[2], v[3]]].to_numpy()
   
@@ -79,7 +80,7 @@ for i, v0 in enumerate(var0s):
     plot_data[v0].T[0].reshape((len(var1s),len(var2s))),
     plot_data[v0].T[1].reshape((len(var1s),len(var2s))),
     plot_data[v0].T[2].reshape((len(var1s),len(var2s))),
-    levels=levels,
+    levels=levels[1::],
     linestyles='dashed',
     linewidths=.75,
     colors = ['black']
@@ -94,32 +95,26 @@ for i, v0 in enumerate(var0s):
     norm = norm
     )
 
-  axs.set_yticks([3,4,5,6,7])
+  axs.set_yticks([3,4,5,6,7,8])
   axs.set_xticks([0,.1,.2,.3,.4])
-  if i in [0,4]:
-    axs.set_ylabel(r'$r$')
   
-  if i in [4,5,6,7]:
-    axs.set_xlabel(r'$\delta$')
+  if i in [0,3]:
+    axs.set_ylabel(r'synergy factor $r$')
   
-    
-  if i not in [0,4]:
-      axs.set_yticklabels([])
+  if i not in [0,3]:
+    axs.set_yticklabels([])
   
-  if i not in [4,5,6,7]:
-      axs.set_xticklabels([])
+  if i in [3,4,5,6]:
+    axs.set_xlabel(r'roaming agents participation $\delta$')
+  
+  if i not in [3,4,5,6]:  
+    axs.set_xticklabels([])
       
-      
+  axs.yaxis.set_minor_locator(AutoMinorLocator(n=5))
+  axs.xaxis.set_minor_locator(AutoMinorLocator(n=4))
   axs.set_title(r'$K$='+str(v0))
-  # axs.text(0.5/2,6.6,r'$K$='+str(v0), ha='center')
 
-  # axs.set_xlabel(vl[1])
-#  if i == 0:
-      # axs.set_ylabel(vl[2])
-
-  # im = axs.matshow (plot_data[3].T[2].reshape(len(var1s), len(var2s)), cmap='Reds', norm=colors.Normalize(vmin=0, vmax=1))
-
-  axs.grid(True, linestyle=':', linewidth=0.5, c='k')
+  axs.grid(True, which='major',linestyle='-.', linewidth=0.25, c='k', alpha=0.75)
 
 cbar_ax = fig.add_axes([0.12, 1.025, 0.8, 0.02])
 cbar = fig.colorbar(im, cax=cbar_ax, orientation="horizontal")

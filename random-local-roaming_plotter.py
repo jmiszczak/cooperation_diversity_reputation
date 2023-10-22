@@ -3,13 +3,14 @@
 # %% initial imports
 import pandas as pd
 import numpy as np
-import os
+
 import matplotlib as mpl
 import matplotlib.figure as figure
-from os.path import exists
 import matplotlib.colors as colors
+from matplotlib.ticker import AutoMinorLocator
+
 from IPython.display import display
-from matplotlib.ticker import AutoMinorLocator, MultipleLocator
+
 mpl.rc('text', usetex=True)
 mpl.rc('font', family='serif')
 mpl.rc('font', size=9)
@@ -42,11 +43,12 @@ for v0 in var0s:
                 data[(data[v[0]] == v0) & (data[v[1]] == v1) & (data[v[2]] == v2)]['mean-cooperators1k'].mean()
             ]
 
+# df = df.replace('nan', 0)
 
 #%% plot 
 # leves for contour plot
 # levels = list(map( lambda x : x/20, list(range(0,23))))
-levels = [0,0.1,0.5,0.75,0.9,0.95,0.98, 1]
+levels = [0.0, 0.1, 0.5, 0.75, 0.9, 0.95, 0.98, 1.0]
 
 
 # color map for contour plot
@@ -78,9 +80,9 @@ for i, v0 in enumerate(var0s):
     plot_data[v0].T[0].reshape((len(var1s),len(var2s))),
     plot_data[v0].T[1].reshape((len(var1s),len(var2s))),
     plot_data[v0].T[2].reshape((len(var1s),len(var2s))),
-    levels=levels,
-    linestyles='dotted',
-    linewidths=.75,
+    levels=levels[1::],
+    linestyles='dashed',
+    linewidths=.5,
     colors = ['black']
     )
 
@@ -91,24 +93,25 @@ for i, v0 in enumerate(var0s):
     plot_data[v0].T[2].reshape((len(var1s),len(var2s))),
     levels=levels,
     cmap = cmap,
-    norm = norm
+    norm = norm,
+    interpolation=None
     )
 
   axs.set_yticks([2.5,3,3.5,4,4.5,5,5.5,6])
-  axs.set_xticks([0,.2,.4,.6,.8,1])
+  axs.set_xticks([0.0,.2,.4,.6,.8,1.0])
+  
   if i in [0,2,4]:
     axs.set_ylabel(r'synergy factor $r$')
   
   # if i in [4,5]:
   axs.set_xlabel(r'roaming agents participation $\delta$')
-  
-    
+      
   if i not in [0,2,4]:
       axs.set_yticklabels([])
       
   # axs.yaxis.grid(False, which='minor')
-  axs.yaxis.set_minor_locator(AutoMinorLocator(n=2))
-  axs.xaxis.set_minor_locator(AutoMinorLocator(n=2))
+  axs.yaxis.set_minor_locator(AutoMinorLocator(n=5))
+  axs.xaxis.set_minor_locator(AutoMinorLocator(n=4))
   
   # if i not in [4,5]:
       # axs.set_xticklabels([])
@@ -122,8 +125,8 @@ for i, v0 in enumerate(var0s):
 
   # im = axs.matshow (plot_data[3].T[2].reshape(len(var1s), len(var2s)), cmap='Reds', norm=colors.Normalize(vmin=0, vmax=1))
 
-  axs.grid(True, which='major',linestyle='--', linewidth=0.5, c='k', alpha=0.5)
-  axs.grid(True, which='minor',linestyle=':', linewidth=0.25, c='lightgray', alpha=0.5)
+  axs.grid(True, which='major',linestyle='-.', linewidth=0.25, c='k', alpha=0.75)
+  # axs.grid(True, which='minor',linestyle=':', linewidth=0.25, c='k', alpha=0.5)
 
 
 cbar_ax = fig.add_axes([0.125, 1.02, 0.8, 0.015])

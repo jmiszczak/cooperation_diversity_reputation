@@ -65,7 +65,7 @@ for i, v0 in enumerate(var0s):
     plot_data[v0].T[0].reshape((len(var1s),len(var2s))),
     plot_data[v0].T[1].reshape((len(var1s),len(var2s))),
     plot_data[v0].T[2].reshape((len(var1s),len(var2s))),
-    levels=10,
+    levels=levels[1::],
     linestyles='dashed',
     linewidths=.75,
     colors = ['black']
