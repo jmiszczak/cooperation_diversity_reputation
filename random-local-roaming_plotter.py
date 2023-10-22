@@ -9,7 +9,7 @@ import matplotlib.figure as figure
 from os.path import exists
 import matplotlib.colors as colors
 from IPython.display import display
-
+from matplotlib.ticker import AutoMinorLocator, MultipleLocator
 mpl.rc('text', usetex=True)
 mpl.rc('font', family='serif')
 mpl.rc('font', size=9)
@@ -45,11 +45,24 @@ for v0 in var0s:
 
 #%% plot 
 # leves for contour plot
-levels = list(map( lambda x : x/10, list(range(0,11))))
+# levels = list(map( lambda x : x/20, list(range(0,23))))
+levels = [0,0.1,0.5,0.75,0.9,0.95,0.98, 1]
+
 
 # color map for contour plot
-cmap = colors.LinearSegmentedColormap.from_list('', ['darkred', 'red', 'orange', 'yellow', 'white'])
+# cmap = colors.LinearSegmentedColormap.from_list('', ['darkred', 'red', 'orange', 'yellow', 'darkgreen'])
+# cmap = colors.LinearSegmentedColormap.from_list('', ['red', 'orange', 'white'])
+# cmap = colors.ListedColormap( ['red', 'yellow', 'white'])
+# cmap = colors.LinearSegmentedColormap.from_list('', ['red', 'white'])
+# cmap = 'viridis'
 
+plotColors = ['orange',  'red', 'tomato',
+               'gold',
+              'yellow', 'palegreen', 'white']
+cmap, norm = colors.from_levels_and_colors(levels, plotColors)
+
+
+# cmap ='Reds_r'
 # contained for plotted data
 plot_data = dict()
 
@@ -66,7 +79,7 @@ for i, v0 in enumerate(var0s):
     plot_data[v0].T[1].reshape((len(var1s),len(var2s))),
     plot_data[v0].T[2].reshape((len(var1s),len(var2s))),
     levels=levels,
-    linestyles='dashed',
+    linestyles='dotted',
     linewidths=.75,
     colors = ['black']
     )
@@ -77,11 +90,11 @@ for i, v0 in enumerate(var0s):
     plot_data[v0].T[1].reshape((len(var1s),len(var2s))),
     plot_data[v0].T[2].reshape((len(var1s),len(var2s))),
     levels=levels,
-    cmap=cmap,   
-    norm=colors.Normalize(vmin=0, vmax=0.95),
+    cmap = cmap,
+    norm = norm
     )
 
-  axs.set_yticks([2.5,3,3.5,4,4.5,5,5.5,6,6.5])
+  axs.set_yticks([2.5,3,3.5,4,4.5,5,5.5,6])
   axs.set_xticks([0,.2,.4,.6,.8,1])
   if i in [0,2,4]:
     axs.set_ylabel(r'synergy factor $r$')
@@ -92,6 +105,10 @@ for i, v0 in enumerate(var0s):
     
   if i not in [0,2,4]:
       axs.set_yticklabels([])
+      
+  # axs.yaxis.grid(False, which='minor')
+  axs.yaxis.set_minor_locator(AutoMinorLocator(n=2))
+  axs.xaxis.set_minor_locator(AutoMinorLocator(n=2))
   
   # if i not in [4,5]:
       # axs.set_xticklabels([])
@@ -105,7 +122,9 @@ for i, v0 in enumerate(var0s):
 
   # im = axs.matshow (plot_data[3].T[2].reshape(len(var1s), len(var2s)), cmap='Reds', norm=colors.Normalize(vmin=0, vmax=1))
 
-  axs.grid(True, linestyle=':', linewidth=0.5, c='k')
+  axs.grid(True, which='major',linestyle='--', linewidth=0.5, c='k', alpha=0.5)
+  axs.grid(True, which='minor',linestyle=':', linewidth=0.25, c='lightgray', alpha=0.5)
+
 
 cbar_ax = fig.add_axes([0.125, 1.02, 0.8, 0.015])
 cbar = fig.colorbar(im, cax=cbar_ax, orientation="horizontal")
@@ -118,3 +137,28 @@ display(fig)
 fName = "plots/plot_" + exp_desc + ".pdf"
 print("[INFO] Saving " + fName)
 fig.savefig(fName, format="pdf", bbox_inches='tight')
+
+#%% min delta
+data_md = dict()
+data_max1 = dict()
+data_max2 = dict()
+thr1 = 0.95
+thr2 = 0.97
+
+for k in var0s:
+    data_md[k] = df[df[v[0]] == k][[v[1], v[2], v[3]]]
+                                
+for k in var0s:
+    data_max1[k] = data_md[k][data_md[k]['mean-cooperators1k'] >= thr1 ]
+    data_max2[k] = data_md[k][data_md[k]['mean-cooperators1k'] >= thr2 ]
+    
+#min_delta1 = [min(data_max1[x]['roaming-agents']) for x in var0s]
+#min_delta2 = [min(data_max2[x]['roaming-agents']) for x in var0s]
+
+min_delta1 = [min(data_max1[x][data_max1[x]['synergy-factor'] == min(data_max1[x]['synergy-factor'])]['roaming-agents'])  for x in var0s]
+min_delta2 = [min(data_max2[x][data_max1[x]['synergy-factor'] == min(data_max2[x]['synergy-factor'])]['roaming-agents'])  for x in var0s]
+
+print(min_delta1)
+
+print(min_delta2)
+

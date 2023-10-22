@@ -59,7 +59,7 @@ to go
     play-pgg
   ]
 
-  ;; imitate the strategy using the selecedt policy
+  ;; imitate the strategy using the seleced policy
   (ifelse imitation-policy = "linear" [
     ask patches [
       imitate-strategy-linear
@@ -331,7 +331,7 @@ CHOOSER
 neighborhood-type
 neighborhood-type
 "von Neumann" "Moore" "von Neumann or Moore" "random von Neumann" "random Moore" "random von Neumann or Moore" "random patches" "K patches"
-3
+7
 
 BUTTON
 117
@@ -378,7 +378,7 @@ synergy-factor
 synergy-factor
 0
 16
-3.2
+16.0
 0.05
 1
 NIL
@@ -429,7 +429,7 @@ CHOOSER
 imitation-policy
 imitation-policy
 "fermi-dirac" "linear"
-1
+0
 
 SLIDER
 11
@@ -440,7 +440,7 @@ random-patches-number
 random-patches-number
 2
 16
-2.0
+6.0
 1
 1
 NIL
@@ -455,7 +455,7 @@ roaming-agents
 roaming-agents
 0
 1
-0.5
+0.1
 0.05
 1
 NIL
