@@ -75,11 +75,13 @@ to go
   ask patches [
 
     ;; strategy imitation method
-    ifelse imitation-policy = "linear" [
+    (ifelse imitation-policy = "linear" [
       imitate-strategy-linear
-    ] [
+    ] imitation-policy = "linear" [
       imitate-strategy-fermi-dirac
-    ]
+    ] imitation-policy = "differences" [
+      imitate-strategy-differences
+    ])
 
     ;; update colors of the visual representation - NOTE: this should be commented out by default
     update-colors
@@ -233,6 +235,29 @@ to imitate-strategy-linear
       set contribution [ contribution ] of my-neighbor
     ]
   ]
+end
+
+;;------------------------------------------------------------------------------------
+;; version with imitation based on payoff differences
+;;------------------------------------------------------------------------------------
+to imitate-strategy-differences
+  ;; select one of the neighbors
+  let my-neighbor one-of neighborhood
+  let my-neighbor-income [ income ] of my-neighbor
+
+  ;; select new strategy using the difference of payyofs rule
+  (ifelse income < my-neighbor-income [
+    ;; always imitate from the neighbour with higer income
+    set contribution [ contribution ] of my-neighbor
+  ] income > my-neighbor-income [
+    ;; do nothing
+  ] income = my-neighbor-income[
+    ;; imitate from the neighbour with higer income with p=1/2
+    if random-float 1.0 < 0.5 [
+      set contribution [ contribution ] of my-neighbor
+    ]
+  ])
+
 end
 
 ;;------------------------------------------------------------------------------------
@@ -428,8 +453,8 @@ CHOOSER
 352
 imitation-policy
 imitation-policy
-"fermi-dirac" "linear"
-0
+"fermi-dirac" "linear" "differences"
+2
 
 SLIDER
 11
