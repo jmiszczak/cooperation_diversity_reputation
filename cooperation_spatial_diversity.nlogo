@@ -376,10 +376,10 @@ NIL
 0
 
 PLOT
-648
+642
 12
-901
-179
+895
+270
 Cooperation factor
 time step
 fraction of cooperators
@@ -425,10 +425,10 @@ NIL
 HORIZONTAL
 
 MONITOR
-649
-254
-898
-299
+646
+346
+895
+391
 NIL
 mean-cooperators1k
 3
@@ -436,10 +436,10 @@ mean-cooperators1k
 11
 
 MONITOR
-648
-193
-898
-238
+645
+285
+895
+330
 cooperators fraction
 cooperators-fraction
 4
