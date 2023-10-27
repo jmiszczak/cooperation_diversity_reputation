@@ -482,41 +482,70 @@ HORIZONTAL
 @#$#@#$#@
 ## WHAT IS IT?
 
-Public Goods Game with some modifications.
+This model implements Public Goods Game with modifications enabling the randomized selection of the interaction neighbourhoods. Players, implemented using NetLogo patches, are located on 2D lattice. They can interact with agents in their neighbourhoods, which can be selected using from von Neumann neighbourhood, from Moore neighbourhood, or from any agents on the grid.
+
 
 ## HOW IT WORKS
 
-(what rules the agents use to create the overall behavior of the model)
+Each agent is assigned initial strategy contributor or free rider/defector. Some players
 
-Interaction diversity - different number of neighbours to interact with and to learn from.
+The rules of the elementary game are based on the Public Goods Game. A player contributes 1 (contributor) or 0 (free rider/defector) to a common pool. Next, the total amount is multiplied by the *synergy-factor*, and the result is divided equally among the participating agents. The income of each player is increased by this divided amount and decreased by its contribution.
+
+Each agent is engaged in a number of elementary games. Payoffs from each game are accumulated into an income after a round. 
+
+After all the elementary games are finalized, the agent starts the imitation phase. Each agent chooses a neighbour from its interaction neighbourhood. The income of the agent is compared with the income of the selected neighbour, and the difference is used to calculate the probability of the agent to imitate the strategy of the selected neighbour.
+
+There are two aspects of diversity introduced in the model.
+
+The first aspect is the interaction diversity, which means that each agent can have the different number of neighbours to interact with and to learn from. This is reflected by the initial assignment of the groups of agents to interact with.
+
+The second aspect is used to introduce the possibility of reevaluation of the interaction neighbourhood. This is achieved by introducing the subpopulation of roaming agents, which can alter their interaction neighbourhood. For the sake of simplicity, we fix a probability of reevaluation to 1/2. Furthermore, agents are assigned a status of roaming during the initialization, and the status remains unchanged during the simulation.
 
 ## HOW TO USE IT
 
-(how to use the model, including a description of each of the items in the Interface tab)
+The parameters for controlling the model are:
+
+  * slider *world-size* - used to set the size of the grid;
+  * slider *noise-factor* - controlling of the noise parameter used in the Fermi-Dirac imitation function;
+  * slider *synergy-factor* - controlling the synergy factor used in the payoff calculation in each elementary PGG;
+  * chooser *neighborhood-type* - used to select the type of the neighbourhood assigned to each agent; 
+  * slider *random-patches-number* - controlling the size of the interaction neighbourhood selected for *neighborhood-type* set to *K patches* or *random K patches*;
+  * chooser *imitation-policy* - used to control the function used in the imitation phase; can be set to: *Fermi-Dirac*, *differences* or *linear*;
+  * slider *roaming-agents* - used to control the fraction of agents who are roaming, i.e. they can change their interaction neighbourhoods;
 
 ## THINGS TO NOTICE
 
-(suggested things for the user to notice while running the model)
+There are two things distinguishing the presented model from the standard Public Good Game on 2D lattice.
+
+First, diversification of the interaction neighbourhoods leads to a decrease in the synergy factor required to achieve cooperation.
+
+Second, by introducing a subpopulation of roaming agents, one can also decrease the synergy factor requited to achieve cooperation.
 
 ## THINGS TO TRY
 
-(suggested things for the user to try to do (move sliders, switches, etc.) with the model)
+The interesting behaviour of the model can observed by altering the neighbourhood type. There is a visible difference between the von Neumann and Moore neighbourhood.
+
+The formation of the collaboration can be facilitated by the increase in the number of roaming agents. However, for a very large fraction of roaming agents, the effect is negative, and the collaboration cannot be achieved.
 
 ## EXTENDING THE MODEL
 
-(suggested things to add or change in the Code tab to make the model more complicated, detailed, accurate, etc.)
+The simplest extension of the model can be done by including new methods for selecting neighbours. This can be done by extending *choose-neighborhood* function and including a new variant in the *neighborhood-type* chooser.
 
 ## NETLOGO FEATURES
 
-(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab; or where workarounds were needed for missing features)
+Agents in the model are implemented using NetLogo patches. Even if some of them are described as *roaming*, not changes in location is necessary, as roaming agents move between the interaction neighbourhoods.
+
+The implementation based on patches limits the control over the connectivity of the interaction links. At the moment, only local links or links from the full graph are used.
 
 ## RELATED MODELS
 
-(models in the NetLogo Models Library and elsewhere which are of related interest)
+Implementation if Public Goods Game on a square lattice. http://www.modelingcommons.org/browse/one_model/7074
 
 ## CREDITS AND REFERENCES
 
-Lihui Shang, Sihao Sun, Jun Ai, and Zhan Su. Cooperation enhanced by the interaction diversity for the spatial public goods game on regular lattices. Physica A: Statistical Mechanics and its Applications, 593:126999 DOI:10.1016/j.physa.2022.126999
+[1] Lihui Shang, Sihao Sun, Jun Ai, and Zhan Su. Cooperation enhanced by the interaction diversity for the spatial public goods game on regular lattices. Physica A: Statistical Mechanics and its Applications, 593:126999 DOI:10.1016/j.physa.2022.126999
+
+[2] M. Jusup et al, Social physics, Physics Reports, vol. 948, pp. 1-148 (2022)
 @#$#@#$#@
 default
 true
