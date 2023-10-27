@@ -48,7 +48,7 @@ for v0 in var0s:
 #%% plot 
 # leves for contour plot
 # levels = list(map( lambda x : x/20, list(range(0,23))))
-levels = [0.0, 0.1, 0.5, 0.75, 0.9, 0.95, 0.98, 1.0]
+levels = [0.0, 0.1, 0.5,  0.95, 0.98, 1.0]
 
 
 # color map for contour plot
@@ -58,9 +58,8 @@ levels = [0.0, 0.1, 0.5, 0.75, 0.9, 0.95, 0.98, 1.0]
 # cmap = colors.LinearSegmentedColormap.from_list('', ['red', 'white'])
 # cmap = 'viridis'
 
-plotColors = ['orange',  'red', 'tomato',
-               'gold',
-              'yellow', 'palegreen', 'white']
+plotColors = ['tomato','orange' , 
+              'yellow', 'palegreen', 'lightblue']
 cmap, norm = colors.from_levels_and_colors(levels, plotColors)
 
 

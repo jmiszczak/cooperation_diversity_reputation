@@ -20,8 +20,8 @@ mpl.rc('font', size=8)
 # Note: header=6 is for NetLogo data
 
 # experiment name
-# exp_desc = 'min-roaming-random-patches-small-150'
-exp_desc = 'min-roaming-random-patches-l64-even'
+exp_desc = 'min-roaming-random-patches-small-150'
+# exp_desc = 'min-roaming-random-patches-l64-even'
 # exp_desc = 'min-roaming-random-patches-medium'
 
 # variables usd in the plots
@@ -34,6 +34,7 @@ df = pd.DataFrame(columns=v)
 var0s = data[v[0]].unique()
 var1s = data[v[1]].unique()
 var2s = data[v[2]].unique()
+var0s = np.array([4,8,10,12])
 
 # %% preprocess
 for v0 in var0s:
@@ -59,9 +60,10 @@ for v0 in var0s:
 levels = [0,0.1,0.5,0.75,0.9,0.95,0.98, 1]
 
 
+
 plotColors = ['orange',  'red', 'tomato',
                'gold',
-              'yellow', 'palegreen', 'white']
+              'yellow', 'palegreen', 'lightblue']
 cmap, norm = colors.from_levels_and_colors(levels, plotColors)
 
 
@@ -69,10 +71,10 @@ cmap, norm = colors.from_levels_and_colors(levels, plotColors)
 plot_data = dict()
 
 # one figure for all cases of v0
-fig = figure.Figure(figsize=(6.5, 5.5))
+fig = figure.Figure(figsize=(5,4))
 for i, v0 in enumerate(var0s):
   # Note: 3*2 is the number of cases for var0s 
-  axs = fig.add_subplot(331+i)
+  axs = fig.add_subplot(221+i)
  
   plot_data[v0] = df[df[v[0]] == v0][[v[1], v[2], v[3]]].to_numpy()
   
@@ -98,16 +100,16 @@ for i, v0 in enumerate(var0s):
   axs.set_yticks([3,4,5,6,7,8])
   axs.set_xticks([0,.1,.2,.3,.4])
   
-  if i in [0,3]:
+  if i in [0,2]:
     axs.set_ylabel(r'synergy factor $r$')
   
-  if i not in [0,3]:
+  if i not in [0,2]:
     axs.set_yticklabels([])
   
-  if i in [3,4,5,6]:
+  if i in [2,3]:
     axs.set_xlabel(r'roaming agents participation $\delta$')
   
-  if i not in [3,4,5,6]:  
+  if i not in [2,3,4,5,6]:  
     axs.set_xticklabels([])
       
   axs.yaxis.set_minor_locator(AutoMinorLocator(n=5))
@@ -133,8 +135,9 @@ data_md = dict()
 data_max1 = dict()
 data_max2 = dict()
 thr1 = 0.95
-thr2 = 0.98
+thr2 = 0.97
 pm = lambda x : '-' if x < a else '+'
+
 
 for k in var0s:
     data_md[k] = df[df[v[0]] == k][[v[1], v[2], v[3]]]
@@ -150,7 +153,7 @@ min_delta1 = [min(data_max1[x][data_max1[x]['synergy-factor'] == min(data_max1[x
 min_delta2 = [min(data_max2[x][data_max1[x]['synergy-factor'] == min(data_max2[x]['synergy-factor'])]['roaming-agents'])  for x in var0s]
 
 
-fig = figure.Figure(figsize=(3.5, 2.7))
+fig = figure.Figure(figsize=(3.25,2.5))
 axs = fig.add_subplot()
 axs.set_ylim(-0.01,0.5)
 
