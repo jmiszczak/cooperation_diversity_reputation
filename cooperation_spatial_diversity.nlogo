@@ -83,7 +83,7 @@ to go
       imitate-strategy-differences
     ])
 
-    ;; update colors of the visual representation - NOTE: this should be commented out by default
+    ;; update colors of the visual representation - NOTE: this could be commented out
     update-colors
     ;; reset the income for the next round
     set income 0
@@ -103,6 +103,7 @@ end
 to setup-world
   ;; make the world with custom size
   resize-world 0 (world-size - 1) 0 (world-size - 1)
+
   ;; heuristic scaling of the patch size
   set-patch-size floor ( 50 / (sqrt world-size) )
 
@@ -115,9 +116,9 @@ end
 ;;------------------------------------------------------------------------------------
 ;; setup routine
 ;; contains
-;; - selection of the initial strategies,
-;; - initial neighborhood,
-;; - initial reputation
+;; - initial interaction neighborhood
+;; - selection of the initial strategies
+;; - assignemet of the roaming status
 ;;------------------------------------------------------------------------------------
 to setup-patches
   ask patches [
@@ -126,6 +127,7 @@ to setup-patches
 
     ;; initialize the income
     set income 0
+
     ;; randomly assign initial strategies
     ifelse random-float 1.0 < 0.5 [
       set contribution 1 ;; cooperator
@@ -133,6 +135,7 @@ to setup-patches
       set contribution 0 ;; no contribution, free-rider
     ]
 
+    ;; assign roaming status to a subpopulation
     ifelse random-float 1.0 < roaming-agents [
       set roaming? true ;; agent changing the neighbours
       set plabel "*"
@@ -145,7 +148,7 @@ to setup-patches
 end
 
 ;;------------------------------------------------------------------------------------
-;; select nearby patches of some type
+;; select patches to interact with
 ;;-----------------------------------------------------------------------------------
 to choose-neighborhood
   ;; choose which neighborhood to use
@@ -195,12 +198,14 @@ to play-pgg
   ;; calculate the payoff
   let game-gain ( synergy-factor * (contribution + sum [ contribution ] of neighborhood) / (1 + count neighborhood) )
 
+  ;; assign my income
   set income income + game-gain - contribution
 
+  ;; assign incomes of the agents in the interaction neighbourhood
   ask neighborhood [
     set income income + game-gain - contribution
   ]
- ;; show income
+
 end
 
 ;;------------------------------------------------------------------------------------
