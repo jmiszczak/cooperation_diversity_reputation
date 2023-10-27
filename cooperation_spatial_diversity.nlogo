@@ -59,26 +59,14 @@ to go
     play-pgg
   ]
 
-  ;; imitate the strategy using the seleced policy
-  (ifelse imitation-policy = "linear" [
-    ask patches [
-      imitate-strategy-linear
-    ]
-  ] imitation-policy = "fermi-dirac" [
-    ask patches [
-      imitate-strategy-fermi-dirac
-    ]
-  ]
-  )
-
-  ;; udate the strategy using the cumulative income from the round
+  ;; imitate the strategy using the seleced policy, using the cumulative income from the round
   ask patches [
 
     ;; strategy imitation method
-    (ifelse imitation-policy = "linear" [
-      imitate-strategy-linear
-    ] imitation-policy = "linear" [
+    (ifelse  imitation-policy = "fermi-dirac" [
       imitate-strategy-fermi-dirac
+    ] imitation-policy = "linear" [
+      imitate-strategy-linear
     ] imitation-policy = "differences" [
       imitate-strategy-differences
     ])
