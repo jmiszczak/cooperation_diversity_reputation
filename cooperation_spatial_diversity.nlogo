@@ -4,8 +4,8 @@
 patches-own [
   contribution ;; player's contribution: 1 - contributor, green, 0 - free-rider, black
   income ;; income from the last round
-  neighborhood ;; group of players used for playng the game
-  roaming? ;; should the agent reevaluate the neigbours
+  neighborhood ;; group of players used for playing the game
+  roaming? ;; should the agent reevaluate the neighborhood
 ]
 
 ;;------------------------------------------------------------------------------------
@@ -48,11 +48,11 @@ end
 ;;------------------------------------------------------------------------------------
 to go
   ;; check if the neighborhoods should be chooes each round
-    ask patches [
-      if roaming? [
-        choose-neighborhood
-      ]
+  ask patches [
+    if roaming? [
+      choose-neighborhood
     ]
+  ]
 
   ;; play the public goods game for all patches
   ask patches [
@@ -145,7 +145,7 @@ to setup-patches
 end
 
 ;;------------------------------------------------------------------------------------
-;; select near patches of some type
+;; select nearby patches of some type
 ;;-----------------------------------------------------------------------------------
 to choose-neighborhood
   ;; choose which neighborhood to use
@@ -169,7 +169,7 @@ to choose-neighborhood
     ][
       set neighborhood neighbors4
     ]
-  ] neighborhood-type = "random patches" [
+  ] neighborhood-type = "random K patches" [
      set neighborhood n-of (1 + random random-patches-number ) patches
   ] neighborhood-type = "K patches" [
      set neighborhood n-of ( random-patches-number ) patches
@@ -349,14 +349,14 @@ NIL
 1
 
 CHOOSER
-12
-218
-203
-263
+11
+207
+202
+252
 neighborhood-type
 neighborhood-type
-"von Neumann" "Moore" "von Neumann or Moore" "random von Neumann" "random Moore" "random von Neumann or Moore" "random patches" "K patches"
-7
+"von Neumann" "Moore" "von Neumann or Moore" "random von Neumann" "random Moore" "random von Neumann or Moore" "K patches" "random K patches"
+0
 
 BUTTON
 117
@@ -403,7 +403,7 @@ synergy-factor
 synergy-factor
 0
 16
-16.0
+4.5
 0.05
 1
 NIL
@@ -449,23 +449,23 @@ cooperators-fraction
 CHOOSER
 10
 307
-200
+204
 352
 imitation-policy
 imitation-policy
 "fermi-dirac" "linear" "differences"
-2
+0
 
 SLIDER
-11
-268
-205
-301
+10
+262
+202
+295
 random-patches-number
 random-patches-number
 2
 16
-6.0
+5.0
 1
 1
 NIL
@@ -473,14 +473,14 @@ HORIZONTAL
 
 SLIDER
 11
-361
-201
-394
+362
+205
+395
 roaming-agents
 roaming-agents
 0
 1
-0.1
+0.3
 0.05
 1
 NIL
@@ -853,6 +853,32 @@ NetLogo 6.3.0
     </enumeratedValueSet>
     <enumeratedValueSet variable="imitation-policy">
       <value value="&quot;fermi-dirac&quot;"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="random-local-roaming-differences" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>count turtles</metric>
+    <enumeratedValueSet variable="roaming-agents">
+      <value value="0.1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-patches-number">
+      <value value="6"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="noise-factor">
+      <value value="0.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="synergy-factor">
+      <value value="16"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="neighborhood-type">
+      <value value="&quot;K patches&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="world-size">
+      <value value="64"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="imitation-policy">
+      <value value="&quot;differences&quot;"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>
