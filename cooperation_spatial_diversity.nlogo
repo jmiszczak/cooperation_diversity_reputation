@@ -487,7 +487,7 @@ This model implements Public Goods Game with modifications enabling the randomiz
 
 ## HOW IT WORKS
 
-Each agent is assigned initial strategy contributor or free rider/defector. Some players
+Each agent is assigned initial strategy contributor or free rider/defector. Some players are assigned status of roaming agents, and the are allowed to change their interaction neighbourhood after each round.
 
 The rules of the elementary game are based on the Public Goods Game. A player contributes 1 (contributor) or 0 (free rider/defector) to a common pool. Next, the total amount is multiplied by the *synergy-factor*, and the result is divided equally among the participating agents. The income of each player is increased by this divided amount and decreased by its contribution.
 
