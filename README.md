@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10073045.svg)](https://doi.org/10.5281/zenodo.10073045)
+
 # cooperation_diversity_reputation
 
 NetLogo implementation of the model of cooperation with interaction diversity and reputation-updating timescale.
