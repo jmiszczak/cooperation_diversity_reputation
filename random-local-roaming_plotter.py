@@ -48,7 +48,7 @@ for v0 in var0s:
 #%% plot 
 # leves for contour plot
 # levels = list(map( lambda x : x/20, list(range(0,23))))
-levels = [0.0, 0.1, 0.5,  0.95, 0.98, 1.0]
+levels = [0.0, 0.1, 0.5, 0.95, 0.98, 1.0]
 
 
 # color map for contour plot
@@ -145,7 +145,7 @@ data_md = dict()
 data_max1 = dict()
 data_max2 = dict()
 thr1 = 0.95
-thr2 = 0.97
+thr2 = 0.99
 
 for k in var0s:
     data_md[k] = df[df[v[0]] == k][[v[1], v[2], v[3]]]

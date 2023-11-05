@@ -20,8 +20,8 @@ mpl.rc('font', size=8)
 # Note: header=6 is for NetLogo data
 
 # experiment name
-exp_desc = 'min-roaming-random-patches-small-150'
-# exp_desc = 'min-roaming-random-patches-l64-even'
+# exp_desc = 'min-roaming-random-patches-small-150'
+exp_desc = 'min-roaming-random-patches-l64-even'
 # exp_desc = 'min-roaming-random-patches-medium'
 
 # variables usd in the plots
@@ -34,7 +34,7 @@ df = pd.DataFrame(columns=v)
 var0s = data[v[0]].unique()
 var1s = data[v[1]].unique()
 var2s = data[v[2]].unique()
-var0s = np.array([4,8,10,12])
+# var0s = np.array([4,6,8,10,12])
 
 # %% preprocess
 for v0 in var0s:
@@ -49,6 +49,8 @@ for v0 in var0s:
 
 
 #%% plot 
+var0s = np.array([4,8,10,12])
+
 # levels for contour plot
 # levels = list(map( lambda x : x/10, list(range(0,11))))
 
@@ -131,11 +133,12 @@ print("[INFO] Saving " + fName)
 fig.savefig(fName, format="pdf", bbox_inches='tight')
 
 #%% min delta
+var0s = np.array([4,6,8,10,12])
 data_md = dict()
 data_max1 = dict()
 data_max2 = dict()
-thr1 = 0.95
-thr2 = 0.97
+thr1 = 0.90
+thr2 = 0.98
 pm = lambda x : '-' if x < a else '+'
 
 
