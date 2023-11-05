@@ -517,9 +517,9 @@ The parameters for controlling the model are:
 
 There are two things distinguishing the presented model from the standard Public Good Game on 2D lattice.
 
-First, diversification of the interaction neighbourhoods leads to a decrease in the synergy factor required to achieve cooperation.
+First, diversification of the interaction neighbourhoods leads to a decrease of the synergy factor required to achieve cooperation. This can be observed by chooising *neighborhood-type* as "random von Neumann" or "random Moore".
 
-Second, by introducing a subpopulation of roaming agents, one can also decrease the synergy factor requited to achieve cooperation.
+Second, by introducing a subpopulation of roaming agents, one can also decrease the synergy factor requited to achieve cooperation. To observe this one needs to choose *neighborhood-type* as "random von Neumann", "random Moore", "K patches" or "random K patches. Netx, the participarion of the roaming agents can be controlled using *roaming-agents* slider.
 
 ## THINGS TO TRY
 
@@ -539,7 +539,7 @@ The implementation based on patches limits the control over the connectivity of 
 
 ## RELATED MODELS
 
-Implementation if Public Goods Game on a square lattice. http://www.modelingcommons.org/browse/one_model/7074
+Implementation of Public Goods Game on a square lattice. http://www.modelingcommons.org/browse/one_model/7074
 
 ## CREDITS AND REFERENCES
 
