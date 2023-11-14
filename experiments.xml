@@ -64,7 +64,7 @@
     </enumeratedValueSet>
     <steppedValueSet variable="synergy-factor" first="2.5" step="0.1" last="6.5"/>
     <enumeratedValueSet variable="neighborhood-type">
-      <value value="&quot;random patches&quot;"/>
+      <value value="&quot;random K patches&quot;"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="world-size">
       <value value="64"/>
@@ -89,7 +89,7 @@
     </enumeratedValueSet>
     <steppedValueSet variable="synergy-factor" first="3" step="0.1" last="8"/>
     <enumeratedValueSet variable="neighborhood-type">
-      <value value="&quot;random patches&quot;"/>
+      <value value="&quot;random K patches&quot;"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="world-size">
       <value value="16"/>
@@ -111,7 +111,7 @@
     </enumeratedValueSet>
     <steppedValueSet variable="synergy-factor" first="3" step="0.1" last="8"/>
     <enumeratedValueSet variable="neighborhood-type">
-      <value value="&quot;random patches&quot;"/>
+      <value value="&quot;random K patches&quot;"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="world-size">
       <value value="32"/>
