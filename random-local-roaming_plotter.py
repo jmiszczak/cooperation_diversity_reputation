@@ -48,8 +48,7 @@ for v0 in var0s:
 #%% plot 
 # leves for contour plot
 # levels = list(map( lambda x : x/20, list(range(0,23))))
-levels = [0.0, 0.1, 0.5, 0.95, 0.98, 1.0]
-
+levels = [0,0.1,0.5,0.75,0.9,0.95,0.98, 1]
 
 # color map for contour plot
 # cmap = colors.LinearSegmentedColormap.from_list('', ['darkred', 'red', 'orange', 'yellow', 'darkgreen'])
@@ -58,17 +57,16 @@ levels = [0.0, 0.1, 0.5, 0.95, 0.98, 1.0]
 # cmap = colors.LinearSegmentedColormap.from_list('', ['red', 'white'])
 # cmap = 'viridis'
 
-plotColors = ['tomato','orange' , 
-              'yellow', 'palegreen', 'lightblue']
+plotColors = ['orange',  'red', 'tomato',
+              'yellow', 'palegreen', 'lightblue', 'white']
 cmap, norm = colors.from_levels_and_colors(levels, plotColors)
-
 
 # cmap ='Reds_r'
 # contained for plotted data
 plot_data = dict()
 
 # one figure for all cases of v0
-fig = figure.Figure(figsize=(5, 6))
+fig = figure.Figure(figsize=(6, 7))
 for i, v0 in enumerate(var0s):
   # Note: 3*2 is the number of cases for var0s 
   axs = fig.add_subplot(321+i);
